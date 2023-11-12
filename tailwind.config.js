@@ -12,7 +12,7 @@ export default {
       },
       colors:{
         'green': '#01A140'
-      }
+      },
     },
   },
   plugins: [],
