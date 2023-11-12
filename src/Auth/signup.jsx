@@ -2,7 +2,7 @@ import React from 'react'
 
 function signup() {
   return (
-    <div>
+    <div className='bg-black h-screen'>
       
     </div>
   )
