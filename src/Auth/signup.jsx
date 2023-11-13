@@ -1,5 +1,5 @@
 import React from 'react'
-import signUpImg from './imgs/signupImg.jpg'
+import signUpImg from '../assets/auth/signupImg.jpg'
 import { FcGoogle } from 'react-icons/fc'
 
 function signup() {
