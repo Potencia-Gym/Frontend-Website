@@ -1,5 +1,5 @@
 import React from 'react'
-import manimg from '../imgs/ManPunch.png'
+import manimg from '../../assets/landingPage/ManPunch.png'
 import { Link } from 'react-router-dom'
 
 function Home() {
