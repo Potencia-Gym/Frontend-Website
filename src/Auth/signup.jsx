@@ -1,8 +1,34 @@
-import React from 'react'
+
 import signUpImg from '../assets/auth/signupImg.jpg'
 import { FcGoogle } from 'react-icons/fc'
+import { auth, provider } from './firebaseconfig'
+import {signInWithRedirect, getRedirectResult  } from "firebase/auth";
+import {useNavigate} from 'react-router-dom';
+import {React, useCallback, useEffect, useRef, useState } from 'react';
 
-function signup() {
+function Signup() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState();
+
+  const handleGoogleSignIn = async ()=>{
+    try{
+      signInWithRedirect (auth, provider);
+    }
+    catch(error){
+      console.error(error)
+    }
+  }
+
+  const fetch = useCallback(async ()=>{
+    const result = await getRedirectResult(auth);
+    console.log(result);
+    if(result) navigate('/dashboard');
+  })
+
+  useEffect( ()=>{
+    fetch();
+  },[fetch])
+
   return (
     <div className="flex flex-col md:flex-row h-screen items-center bg-black font-font1">
 
@@ -42,9 +68,9 @@ function signup() {
 
           <hr className="my-6 border-gray-700 w-full" />
 
-          <button type="button" className="w-full block bg-black hover:bg-gray-900 text-gray-100 font-semibold rounded-lg px-4 py-3 border border-gray-300">
+          <button onClick={handleGoogleSignIn} type="button" className="w-full block bg-black hover:bg-gray-900 text-gray-100 font-semibold rounded-lg px-4 py-3 border border-gray-300">
             <div className="flex items-center justify-center">
-              <span className="ml-4"><FcGoogle className='inline text-xl mr-2' />Log in with Google</span>
+              <span className="ml-4"><FcGoogle className='inline text-xl mr-2' />Sign Up with Google</span>
             </div>
           </button>
         </div>
@@ -55,4 +81,4 @@ function signup() {
   )
 }
 
-export default signup
+export default Signup
