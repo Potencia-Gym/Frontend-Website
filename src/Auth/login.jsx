@@ -2,7 +2,7 @@ import React from 'react'
 import loginImg from '../assets/auth/loginImg.jpg'
 import { FcGoogle } from 'react-icons/fc'
 
-function login() {
+function Login() {
   return (
     <div className="flex flex-col md:flex-row h-screen items-center bg-black font-font1">
 
@@ -45,4 +45,4 @@ function login() {
   )
 }
 
-export default login
+export default Login
