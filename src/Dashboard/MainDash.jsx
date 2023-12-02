@@ -1,9 +1,12 @@
 import React from 'react'
+import Sidebar from './Components/Sidebar'
+import Topbar from './Components/Topbar'
 
 function MainDash() {
   return (
-    <div>
-      <h1 className='text-3xl text-sky-400'>Hello Dashboard!</h1>
+    <div className='font-font1 bg-lightgrey dark:bg-grey dark:text-white w-screen h-screen'>
+      <Topbar />
+      <Sidebar />
     </div>
   )
 }
