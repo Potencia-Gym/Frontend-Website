@@ -23,7 +23,7 @@ function Signup() {
     const result = await getRedirectResult(auth);
     console.log(result);
     if(result) navigate('/dashboard');
-  })
+  },[navigate])
 
   useEffect( ()=>{
     fetch();

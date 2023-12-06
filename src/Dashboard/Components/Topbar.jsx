@@ -16,9 +16,8 @@ const Topbar = () => {
   }
 
   return (
-    <div className='sticky flex justify-end items-center ml-auto w-[80vw] h-[10vh] bg-white dark:bg-black dark:text-white'>
-
-      <button className='mr-4 text-2xl border-2 p-1 rounded-xl border-black dark:border-white' onClick={handleTheme}>{theme==="light" ? <CiLight /> : <CiDark/>}</button>
+    <div className='sticky flex justify-end items-center h-[10vh] bg-white dark:bg-black dark:text-white'>
+      <button className='mr-4 text-2xl border-2 p-1 rounded-xl border-green' onClick={handleTheme}>{theme==="light" ? <CiLight /> : <CiDark/>}</button>
     </div>
   )
 }
