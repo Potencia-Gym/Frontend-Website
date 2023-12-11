@@ -4,11 +4,13 @@ import { FcGoogle } from 'react-icons/fc'
 import { auth, provider } from './firebaseconfig'
 import {signInWithRedirect, getRedirectResult  } from "firebase/auth";
 import {useNavigate} from 'react-router-dom';
-import {React, useCallback, useEffect, useRef, useState } from 'react';
+import {useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../store/auth-slice';
 
 function Signup() {
   const navigate = useNavigate();
-  const [user, setUser] = useState();
+  const dispatch = useDispatch();
 
   const handleGoogleSignIn = async ()=>{
     try{
@@ -21,9 +23,15 @@ function Signup() {
 
   const fetch = useCallback(async ()=>{
     const result = await getRedirectResult(auth);
-    console.log(result);
-    if(result) navigate('/dashboard');
-  },[navigate])
+    if(result) {
+      // console.log(result);
+      // console.log(result.user.metadata.lastLoginAt);
+      const imp = {name: result.user.displayName, email: result.user.email}
+      dispatch(authActions.loginWithDetails(imp));
+      //localStorage.setItem("session", Number(result.user.metadata.lastLoginAt))
+      navigate('/dashboard');
+    }
+  },[navigate, dispatch])
 
   useEffect( ()=>{
     fetch();

@@ -16,7 +16,7 @@ const Sidebar = (prop) => {
 
   return (
     <>
-      <aside className={`${prop.show ? "max-xl:translate-x-[-100vw]" : "max-xl:left-0"} fixed top-[10vh] left-0 w-[20vw] h-full bg-white dark:bg-black dark:text-white transition ease-in delay-500 max-lg:w-[30vw] max-md:w-[50vw] max-sm:w-screen`}>
+      <aside style={{"transition":"transform 0.3s ease-in"}} className={`${prop.show ? "max-xl:translate-x-[-100vw]" : "max-xl:left-0"} fixed top-[10vh] left-0 w-[20vw] h-full bg-white dark:bg-black dark:text-white max-lg:w-[30vw] max-md:w-[50vw] max-sm:w-screen`}>
 
         <div className="h-full px-3 pb-[150px] text-xl mt-12 flex flex-col">
           <ul className="space-y-3 font-medium">
