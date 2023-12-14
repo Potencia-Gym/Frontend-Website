@@ -25,7 +25,7 @@ function Navbar() {
         </div>
 
         <div className={`${drop ? "":"max-sm:hidden"} flex gap-5 font-font1 justify-center items-center font-semibold max-sm:flex-col max-sm:mt-2 max-sm:mr-auto`}>
-          <Link to={`../login`} className='w-[100px] py-2 text-center bg-green rounded-xl'>Login</Link>
+          {/* <Link to={`../login`} className='w-[100px] py-2 text-center bg-green rounded-xl'>Login</Link> */}
           <Link to={`../signup`} className='w-[100px] py-2 text-center bg-green rounded-xl'>Sign Up</Link>
         </div>
 
