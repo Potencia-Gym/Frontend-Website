@@ -1,41 +1,46 @@
-import {createBrowserRouter} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import App from '../Landing Page/App'
 import Dashboard from '../Dashboard/MainDash'
 import { Login, Signup } from "../Auth";
 import TrackProgress from "../Dashboard/Pages/TrackProgress";
 import DietPlanner from "../Dashboard/Pages/DietPlanner";
 import ExercisePlanner from "../Dashboard/Pages/ExercisePlanner";
+import LiveStream from "../Dashboard/Pages/LiveStream";
 
 const router = createBrowserRouter([
     {
-        path:'/',
+        path: '/',
         element: <App />
     },
     {
-        path:'/signup',
+        path: '/signup',
         element: <Signup />
     },
     {
-        path:'/login',
+        path: '/login',
         element: <Login />
     },
     {
-        path:'/dashboard',
+        path: '/dashboard',
         element: <Dashboard />,
-        children:[
+        children: [
             {
-                path:'track-progress',
-                element: <TrackProgress/>
+                path: 'track-progress',
+                element: <TrackProgress />
             },
             {
-                path:'diet-planner',
-                element: <DietPlanner/>
+                path: 'diet-planner',
+                element: <DietPlanner />
             },
             {
-                path:'exercise-planner',
-                element: <ExercisePlanner/>
+                path: 'exercise-planner',
+                element: <ExercisePlanner />
             },
         ]
+    },
+    {
+        path: '/stream',
+        element: <LiveStream />,
     }
 ]);
 
