@@ -49,9 +49,9 @@ function Signup() {
 
       <div className="bg-black text-white w-full md:max-w-md lg:max-w-full md:mx-auto md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12 flex items-center justify-center">
         <div className="w-full h-100">
-          <h1 className="text-xl md:text-2xl font-bold mt-12">Create your new account</h1>
+          <h1 className="text-xl md:text-2xl font-bold mt-12">Sign in to your account</h1>
 
-          <form className="mt-6" action="" method="">
+          {/* <form className="mt-6" action="" method="">
             <div>
               <label className="text-gray-200">Name</label>
               <input placeholder="Enter Name" className="w-full px-4 py-3 rounded-lg bg-gray-800 mt-2 border focus:border-green focus:bg-gray-900 focus:outline-none" />
@@ -75,7 +75,7 @@ function Signup() {
             <button type="submit" className="w-full block bg-green hover:bg-green/70 focus:bg-indigo-400 text-white font-semibold rounded-lg px-4 py-3 mt-6">
               Sign Up
             </button>
-          </form>
+          </form> */}
 
           <hr className="my-6 border-gray-700 w-full" />
 
