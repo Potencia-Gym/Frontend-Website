@@ -13,20 +13,12 @@ function MainDash() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const [showSidebar, setShowSidebar] = useState(true);
   const [loading, setLoading] = useState(false);
-  //const session = localStorage.getItem("session");
-  //const [sessionCheck, setSessionCheck] = useState(false)
 
   useEffect(() => {
-    //ADD LOADING SCREEN BEFORE AND AFTER FETCH
     setLoading(true);
     onAuthStateChanged(auth, (data) => {
       if (data) {
         dispatch(authActions.loginWithDetails({ name: data.displayName, email: data.email }));
-        // console.log((new Date().getTime()), (Number(data.metadata.lastLoginAt) + 1500000));
-        // console.log((new Date().getTime()) > (Number(data.metadata.lastLoginAt) + 1500000));
-        // if((new Date().getTime()) > (Number(data.metadata.lastLoginAt) + 1500000)){
-        //   dispatch(authActions.logout())
-        // }
       }
       else {
         dispatch(authActions.logout())
@@ -34,17 +26,6 @@ function MainDash() {
       setLoading(false);
     })
   }, [dispatch])
-
-  // useEffect(()=>{
-  //   if(isLoggedIn) setSessionCheck(true);
-  // }, [isLoggedIn])
-
-  // useEffect(() => {
-  //   if ((new Date().getTime()) > (session + 1500000)) {
-  //     dispatch(authActions.logout())
-
-  //   }
-  // }, [dispatch, session])
 
   return (
     <div className='h-screen w-screen relative'>
@@ -61,7 +42,7 @@ function MainDash() {
           <Sidebar show={showSidebar} />
         </div>
 
-        <div className='bg-lightgrey dark:bg-grey dark:text-white ml-[20vw] h-[90vh] max-xl:ml-0'>
+        <div className='bg-lightgrey dark:bg-grey dark:text-white ml-[20vw] h-[90vh] max-xl:ml-0 overflow-y-scroll'>
           <Outlet />
         </div>
       </div>)}

@@ -2,16 +2,20 @@
 import signUpImg from '../assets/auth/signupImg.jpg'
 import { FcGoogle } from 'react-icons/fc'
 import { auth, provider } from './firebaseconfig'
-import { signInWithRedirect, getRedirectResult } from "firebase/auth";
+import { signInWithRedirect, getRedirectResult, getAuth } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../store/auth-slice';
+import useFetch from '../hooks/useFetch';
+import { userDetailsActions } from '../store/userdetails-slice';
 
 function Signup() {
   const [loggingIn, setLoggingIn] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const auth = getAuth();
+  const {sendRequest } = useFetch();  // useFetch is a customized hook.
 
   const handleGoogleSignIn = async () => {
     try {
@@ -22,23 +26,36 @@ function Signup() {
     }
   }
 
-  const fetch = useCallback(async () => {
+  const responseFunction = useCallback((res, status) => {
+    console.log(res);
+    if (status === 200) {
+      console.log("INFO HAI");
+      dispatch(userDetailsActions.updateUserDetails(res))
+    }
+    else if(status === 201){
+      console.log("INFO NAHI HAI");
+    }
+  }, [dispatch])
+
+  const fetchData = useCallback(async () => {
     setLoggingIn(true);
     const result = await getRedirectResult(auth);
     setLoggingIn(false);
-    if (result) {
-      // console.log(result);
-      // console.log(result.user.metadata.lastLoginAt);
+    if (result) { 
+      // send 
+      let body ={name: auth.currentUser.displayName, email: auth.currentUser.email, uid: auth.currentUser.uid};
+      sendRequest('user', 'POST', body, responseFunction); //to fetch data from backend using customized useFetch hook
+      
       const imp = { name: result.user.displayName, email: result.user.email }
       dispatch(authActions.loginWithDetails(imp));
-      //localStorage.setItem("session", Number(result.user.metadata.lastLoginAt))
+
       navigate('/dashboard');
     }
-  }, [navigate, dispatch])
+  }, [navigate, dispatch, auth, responseFunction, sendRequest])
 
   useEffect(() => {
-    fetch();
-  }, [fetch])
+    fetchData();
+  }, [fetchData])
 
   return (
     <div className="flex flex-col md:flex-row h-screen items-center bg-black font-font1">
@@ -49,7 +66,7 @@ function Signup() {
 
       <div className="bg-black text-white w-full md:max-w-md lg:max-w-full md:mx-auto md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12 flex items-center justify-center">
         <div className="w-full h-100">
-          <h1 className="text-xl md:text-2xl font-bold mt-12">Sign in to your account</h1>
+          <h1 className="text-xl md:text-2xl font-bold mt-12 text-green">Sign in to your account</h1>
 
           {/* <form className="mt-6" action="" method="">
             <div>
@@ -79,7 +96,7 @@ function Signup() {
 
           <hr className="my-6 border-gray-700 w-full" />
 
-          <button onClick={handleGoogleSignIn} type="button" className="w-full block bg-black hover:bg-gray-900 text-gray-100 font-semibold rounded-lg px-4 py-3 border border-gray-300">
+          <button onClick={handleGoogleSignIn} type="button" className="w-full block bg-black hover:bg-gray-900 text-gray-100 font-semibold rounded-lg px-4 py-3 border border-green">
             <div className="flex items-center justify-center">
 
               {!loggingIn && (<span className="ml-4"><FcGoogle className='inline text-xl mr-2' />Sign Up with Google</span>)}

@@ -15,12 +15,12 @@ const Topbar = () => {
     } else document.documentElement.classList.remove("dark");
   },[theme]);
 
-  const handleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  }
+  // const handleTheme = () => {     // for tailwind light daRK  mode button
+  //   setTheme(theme === "dark" ? "light" : "dark");
+  // }
 
   return (
-    <div className='sticky flex items-center h-[10vh] bg-white dark:bg-black dark:text-white'>
+    <div className='sticky w-full flex items-center h-[10vh] bg-white dark:bg-black dark:text-white'>
 
       <div className='flex items-center justify-center ml-6'>
         <img src={logo} alt='logo' className='h-10'></img>
@@ -28,9 +28,11 @@ const Topbar = () => {
       </div>
       <h1>{name}</h1>
       <h1>{email}</h1>
-      <button className='ml-auto mr-4 text-2xl border-2 p-1 rounded-xl border-green' onClick={handleTheme}>
+
+       {/*for tailwind light dark mode button */}
+      {/* <button className='ml-auto mr-4 text-2xl border-2 p-1 rounded-xl border-green' onClick={handleTheme}>
         {theme === "light" ? <CiLight /> : <CiDark />}
-      </button>
+      </button> */}
 
     </div>
   )
