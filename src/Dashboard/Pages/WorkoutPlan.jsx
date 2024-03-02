@@ -4,12 +4,16 @@ import optionsList from '../../constants';
 import { Select, Space } from 'antd';
 import { getAuth } from 'firebase/auth';
 import url from '../../url';
+import { useDispatch, useSelector } from 'react-redux';
+import { userDetailsActions } from '../../store/userdetails-slice';
 
-const TrackProgress = () => {
+const WorkoutPlan = () => {
   const [basicInfo, setBasicInfo] = useState({}); 
   const [type, setType] = useState([]);
   const [bodypart, setBodyPart] = useState([]);
   const [level, setLevel] = useState([]);
+  const Info=useSelector(state=>state.userDetails);
+  const dispatch = useDispatch();
   
   const handleChange = (e)=>{
     const name = e.target.name;
@@ -29,11 +33,12 @@ const TrackProgress = () => {
         },
         body: JSON.stringify(basicInfo)
     });
-    console.log(res);
-    const json = res.json();
+    const json = await res.json();
     console.log(json);
+    dispatch(userDetailsActions.updateUserDetails(json));
   }
-
+  
+  console.log(Info);
   return (
     <div className='p-4'>
       <div className='w-full'>
@@ -41,26 +46,26 @@ const TrackProgress = () => {
         <form onSubmit={handleFormSubmit} className="w-full mt-3 flex flex-col gap-10 justify-center items-center flex-1">
 
           <div className='flex gap-5 flex-1 flex-wrap justify-between items-center w-full'>
-            <div className='flex gap-3 justify-center items-center'>
-              <label className="text-gray-200">Height (cm)</label>
+            <div className='flex gap-3 min-w-[200px] justify-center items-center'>
+              <label className="text-gray-200 max-xl:min-w-[100px]">Height (cm)</label>
               <input name='height'  value={basicInfo.height || ""} onChange={handleChange} type='number' placeholder="Enter height" className=" px-2 py-1 rounded-lg bg-[#141414] mt-2 border focus:border-green focus:bg-[#141414a9] focus:outline-none" />
             </div>
-            <div className='flex gap-3 justify-center items-center'>
-              <label className="text-gray-200">Weight (kg)</label>
+            <div className='flex gap-3 min-w-[200px] justify-center items-center'>
+              <label className="text-gray-200 max-xl:min-w-[100px]">Weight (kg)</label>
               <input name='weight' value={basicInfo.weight || ""} onChange={handleChange} type='number' placeholder="Enter weight" className=" px-2 py-1 rounded-lg bg-[#141414] mt-2 border focus:border-green focus:bg-[#141414a9] focus:outline-none" />
             </div>
-            <div className='flex gap-3 justify-center items-center'>
-              <label className="text-gray-200">Age</label>
+            <div className='flex gap-3 min-w-[200px] justify-center items-center'>
+              <label className="text-gray-200 max-xl:min-w-[100px]">Age</label>
               <input name='age' value={basicInfo.age || ""} onChange={handleChange} type='number' placeholder="Enter age" className=" px-2 py-1 rounded-lg bg-[#141414] mt-2 border focus:border-green focus:bg-[#141414a9] focus:outline-none" />
             </div>
-            <div className='flex gap-3 justify-center items-center'>
-              <label className="text-gray-200">Gender</label>
+            <div className='flex gap-3 min-w-[200px] justify-center items-center'>
+              <label className="text-gray-200 max-xl:min-w-[100px]">Gender</label>
               <input name='gender' value={basicInfo.gender || ""} onChange={handleChange} placeholder="Enter gender" className=" px-2 py-1 rounded-lg bg-[#141414] mt-2 border focus:border-green focus:bg-[#141414a9] focus:outline-none" />
             </div>
           </div>
 
           <div className='flex w-full gap-3 flex-1 flex-wrap justify-between items-center'>
-            <div className='w-1/4 flex gap-3 justify-center items-center'>
+            <div className='min-w-[290px] flex gap-3 justify-center items-center'>
               <p>Type:</p>
               <Space className='w-full' direction="vertical">
                 <Select
@@ -74,7 +79,7 @@ const TrackProgress = () => {
                 />
               </Space>
             </div>
-            <div className='w-1/4 flex gap-3 justify-center items-center'>
+            <div className='min-w-[290px] flex gap-3 justify-center items-center'>
               <h1 className='w-32'>Body Part:</h1>
               <Space className='w-full' direction="vertical">
                 <Select
@@ -88,7 +93,7 @@ const TrackProgress = () => {
                 />
               </Space>
             </div>
-            <div className='w-1/4 flex gap-3 justify-center items-center'>
+            <div className='min-w-[290px] flex gap-3 justify-center items-center'>
               <p>Level:</p>
               <Space className='w-full' direction="vertical">
                 <Select
@@ -117,4 +122,4 @@ const TrackProgress = () => {
   )
 }
 
-export default TrackProgress
+export default WorkoutPlan

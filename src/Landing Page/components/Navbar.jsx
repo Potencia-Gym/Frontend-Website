@@ -12,7 +12,7 @@ function Navbar() {
         <div className='flex justify-center items-end max-sm:items-center max-sm:justify-between max-sm:w-full'>
           <div className='flex items-center'>
             <img src={logo} alt='logo' className='h-10'></img>
-            <Link to={`/`} className='relative right-3 text-3xl font-head max-sm:text-2xl'>otencia.AI</Link>
+            <Link to={`/`} className='relative top-1 right-3 text-3xl font-head max-sm:text-2xl'>otencia.AI</Link>
           </div>
           <button onClick={()=>setDrop(!drop)} className='hidden max-sm:block max-sm:ml-auto w-5 h-5'><GiHamburgerMenu /></button>
         </div>

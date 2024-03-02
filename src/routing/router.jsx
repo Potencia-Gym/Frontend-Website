@@ -2,9 +2,8 @@ import {createBrowserRouter} from "react-router-dom";
 import App from '../Landing Page/App'
 import Dashboard from '../Dashboard/MainDash'
 import { Login, Signup } from "../Auth";
-import TrackProgress from "../Dashboard/Pages/TrackProgress";
-import DietPlanner from "../Dashboard/Pages/DietPlanner";
-import ExercisePlanner from "../Dashboard/Pages/ExercisePlanner";
+import WorkoutPlan from "../Dashboard/Pages/WorkoutPlan";
+import DailyGoal from "../Dashboard/Pages/DailyGoal";
 
 const router = createBrowserRouter([
     {
@@ -24,16 +23,12 @@ const router = createBrowserRouter([
         element: <Dashboard />,
         children:[
             {
-                path:'track-progress',
-                element: <TrackProgress/>
+                path:'workout-plan',
+                element: <WorkoutPlan/>
             },
             {
-                path:'diet-planner',
-                element: <DietPlanner/>
-            },
-            {
-                path:'exercise-planner',
-                element: <ExercisePlanner/>
+                path:'daily-goal',
+                element: <DailyGoal/>
             },
         ]
     }

@@ -31,7 +31,7 @@ function MainDash() {
     <div className='h-screen w-screen relative'>
 
       {!loading && isLoggedIn && (<div>
-        <div className='absolute text-2xl top-[13vh] -left-1 z-10 xl:hidden'>
+        <div className='absolute text-2xl -left-1 z-50 xl:hidden'>
           <button onClick={() => { setShowSidebar(!showSidebar) }} className='bg-black text-white border-y-2 border-r-2 border-green p-1 rounded-lg'>
             <MdDoubleArrow />
           </button>
@@ -42,7 +42,7 @@ function MainDash() {
           <Sidebar show={showSidebar} />
         </div>
 
-        <div className='bg-lightgrey dark:bg-grey dark:text-white ml-[20vw] h-[90vh] max-xl:ml-0 overflow-y-scroll'>
+        <div className='bg-lightgrey dark:bg-grey dark:text-white ml-[20vw] h-[100vh] max-xl:ml-0 overflow-y-scroll'>
           <Outlet />
         </div>
       </div>)}

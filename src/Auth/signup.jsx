@@ -5,7 +5,7 @@ import { auth, provider } from './firebaseconfig'
 import { signInWithRedirect, getRedirectResult, getAuth } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { authActions } from '../store/auth-slice';
 import useFetch from '../hooks/useFetch';
 import { userDetailsActions } from '../store/userdetails-slice';
@@ -49,7 +49,7 @@ function Signup() {
       const imp = { name: result.user.displayName, email: result.user.email }
       dispatch(authActions.loginWithDetails(imp));
 
-      navigate('/dashboard');
+      navigate('/dashboard/workout-plan');
     }
   }, [navigate, dispatch, auth, responseFunction, sendRequest])
 

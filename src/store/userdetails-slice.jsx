@@ -7,7 +7,7 @@ const userDetailsSlice = createSlice({
         updateUserDetails(state, action){
             state.uid = action.payload.uid || "";
             state.name = action.payload.name || "";
-            state.height = action.payload.height || "";
+            state.email = action.payload.email || "";
             state.information.height  = action.payload.information.height || "";
             state.information.weight  = action.payload.information.weight || "";
             state.information.age  = action.payload.information.age || "";
