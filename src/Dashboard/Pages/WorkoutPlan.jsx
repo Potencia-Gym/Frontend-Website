@@ -115,7 +115,7 @@ const WorkoutPlan = () => {
           </div>
         </form> */}
 
-        <div className='flex flex-wrap flex-1 gap-10 justify-center items-center p-12 max-sm:p-2 max-w-[60vw] max-sm:max-w-[95vw] max-h-[90vh] bg-black rounded-xl overflow-y-scroll scrollbar'>
+        <div className='flex flex-wrap flex-1 gap-10 justify-center items-center p-10 max-sm:p-2 max-w-[60vw] max-sm:max-w-[95vw] max-h-[90vh] bg-black rounded-xl overflow-y-scroll scrollbar border-y-[20px] border-black max-sm:border-y-[20px]'>
 
           <div className='flex bg-grey rounded-xl shadow-md justify-start md:justify-center overflow-x-scroll mx-auto md:mx-12 scrollbar'>
 
