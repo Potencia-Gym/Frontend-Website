@@ -30,7 +30,7 @@ const Sidebar = (prop) => {
             <li>
               <NavLink to={'daily-goal'}
                 className={({ isActive }) =>
-                  isActive ? "flex items-center p-2 rounded-lg bg-gray-100 text-green dark:text-green dark:bg-gray-700 group" : "flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 hover:text-green dark:hover:text-green dark:hover:bg-gray-700 group border border-t"
+                  isActive ? "flex items-center p-2 rounded-lg bg-gray-100 text-green dark:text-green dark:bg-gray-700 group" : "flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 hover:text-green dark:hover:text-green dark:hover:bg-gray-700 group"
                 }>
                 <span className="pl-3">Daily Goal</span>
               </NavLink>

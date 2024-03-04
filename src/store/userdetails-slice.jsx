@@ -11,7 +11,6 @@ const userDetailsSlice = createSlice({
             state.information.height  = action.payload.information.height || "";
             state.information.weight  = action.payload.information.weight || "";
             state.information.age  = action.payload.information.age || "";
-            state.information.gender  = action.payload.information.gender || "";
             state.information.workoutGoal  = action.payload.information.workoutGoal || "";
             state.information.targetMuscle  = action.payload.information.targetMuscle || "";
             state.information.workoutLevel  = action.payload.information.workoutLevel || "";

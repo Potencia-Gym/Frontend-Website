@@ -19,7 +19,7 @@ function Home() {
         </div>
         <div>
           <div className={`flex gap-5 font-font1 text-2xl items-center mt-10 max-sm:text-xl`}>
-            <Link to={`dashboard`} className='w-fit px-6 py-2 text-center bg-green rounded-xl z-10'>Dashboard</Link>
+            <Link to={`dashboard/workout-plan`} className='w-fit px-6 py-2 text-center bg-green rounded-xl z-10'>Dashboard</Link>
             <Link to={`signup`} className='w-fit px-6 py-2 text-center bg-black border-2 border-green rounded-xl z-10'>Sign Up</Link>
           </div>
         </div>
