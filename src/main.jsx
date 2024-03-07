@@ -13,7 +13,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <ConfigProvider   // for ant design components
         theme={{
           algorithm: theme.darkAlgorithm,
+          token: {
+            colorPrimary: '#01A140',
+            fontSize: '16px'
+          }
         }}
+
       >
         <RouterProvider router={router} />
       </ConfigProvider>
