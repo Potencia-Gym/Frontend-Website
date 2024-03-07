@@ -11,6 +11,7 @@ import useFetch from '../../hooks/useFetch';
 
 const WorkoutPlan = () => {
   const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+  const auth = getAuth();
   const [selectedDay, setSelectedDay] = useState('monday');
   const [loading, setLoading] = useState(false);
   const [basicInfo, setBasicInfo] = useState({});
@@ -27,12 +28,7 @@ const WorkoutPlan = () => {
     const value = e.target.value;
     setBasicInfo(prev => ({ ...prev, [name]: value, uid: auth.currentUser.uid }));
   }
-
-  useEffect(() => {
-    setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level }));
-    console.log(basicInfo);
-  }, [level, bodyPart, type]);
-
+  
   const fetchFromML = useCallback(async () => {
     setLoading(true);
     const details = { uid: Info.uid, target_muscle: Object.values(Info.information.targetMuscle), level: Info.information.workoutLevel[0], type: Object.values(Info.information.workoutGoal) };
@@ -49,8 +45,12 @@ const WorkoutPlan = () => {
     setLoading(false);
     console.log('from ML: ', json);
   }, [Info])
-
+  
   useEffect(() => {
+    setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level }));
+  }, [level, bodyPart, type]);
+
+  useEffect(() => {  // to get recommended data
     //if(Info.information.targetMuscle != ""){
     fetchFromML();
     //}
@@ -68,7 +68,6 @@ const WorkoutPlan = () => {
     }
   }, [dispatch])
 
-  const auth = getAuth();
   const handleFormSubmit = async (e) => {
     setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodypart, workoutLevel: level }));
     e.preventDefault();
