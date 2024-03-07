@@ -30,7 +30,8 @@ function Signup() {
     console.log(res);
     if (status === 200) {
       console.log("INFO HAI");
-      dispatch(userDetailsActions.updateUserDetails(res))
+      dispatch(userDetailsActions.updateUserDetails(res));
+      console.log('res: ', res);
     }
     else if(status === 201){
       console.log("INFO NAHI HAI");
