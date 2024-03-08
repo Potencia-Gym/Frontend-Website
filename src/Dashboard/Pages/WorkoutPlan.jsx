@@ -33,7 +33,7 @@ const WorkoutPlan = () => {
     setLoading(true);
     const details = { uid: Info.uid, target_muscle: Object.values(Info.information.targetMuscle), level: Info.information.workoutLevel[0], type: Object.values(Info.information.workoutGoal) };
     console.log('send to ML: ', details);
-    const res = await fetch(url2 + 'recommendation', {
+    const res = await fetch(url2 + 'api/models/recommendation', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
@@ -152,7 +152,7 @@ const WorkoutPlan = () => {
         </div>
 
 
-        {(!loading) ? recommendedData[selectedDay]?.map((val, key) => (<ExerciseCard />)) : ""}
+        {(!loading) ? recommendedData[selectedDay]?.map((val, key) => (<ExerciseCard exerciseData={val} key={key} />)) : ""}
 
         {(loading) ? (<div role="status" className='flex justify-center items-center'>
           <svg aria-hidden="true" className="inline w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-green" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -162,6 +162,7 @@ const WorkoutPlan = () => {
           <span className="sr-only">Loading...</span>
           <span className='text-4xl px-3 dark:text-white tracking-wide'>Loading...</span>
         </div>) : ""}
+        
       </div>
 
 
