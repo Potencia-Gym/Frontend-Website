@@ -33,18 +33,18 @@ const WorkoutPlan = () => {
     setLoading(true);
     const details = { uid: Info.uid, target_muscle: Object.values(Info.information.targetMuscle), level: Info.information.workoutLevel[0], type: Object.values(Info.information.workoutGoal) };
     console.log('send to ML: ', details);
-    const res = await fetch(url2 + 'api/models/recommendation', {
+    const res = await fetch(url2 + 'api/exercises', {  //TO CHECK HOW TO GET FROM YASH UPDATED RECOMMENDATIONS.
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(details)
+      body: JSON.stringify({uid:auth.currentUser.uid})  //details
     });
     const json = await res.json();
     setRecommendedData(json);
     setLoading(false);
     console.log('from ML: ', json);
-  }, [Info])
+  }, [])
   
   useEffect(() => {
     setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level }));
@@ -54,7 +54,7 @@ const WorkoutPlan = () => {
     //if(Info.information.targetMuscle != ""){
     fetchFromML();
     //}
-  }, [Info, fetchFromML])
+  }, [fetchFromML])
 
   const responseFunction = useCallback((res, status) => {
     console.log(res);
@@ -78,6 +78,23 @@ const WorkoutPlan = () => {
   }
   console.log('redux: ', Info);
   console.log('day: ', recommendedData[selectedDay]);
+
+  //function to pass to ExerciseData for the Done implementation
+  const updateExerciseDone = async (exerciseId) =>{
+    
+    const details = {uid: auth.currentUser.uid, day:selectedDay, id:exerciseId};
+    const res = await fetch(url2 + 'api/exercises/mark', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(details)
+    });
+    const json = await res.json();
+    setRecommendedData(json);
+    
+    console.log('After Done clicked: ', json);
+  }
 
   return (
     <div className='py-8 px-16 w-full h-full'>
@@ -152,7 +169,7 @@ const WorkoutPlan = () => {
         </div>
 
 
-        {(!loading) ? recommendedData[selectedDay]?.map((val, key) => (<ExerciseCard exerciseData={val} key={key} />)) : ""}
+        {(!loading) ? recommendedData[selectedDay]?.map((val, key) => (<ExerciseCard exerciseData={val} updateExerciseDone={updateExerciseDone} key={key} />)) : ""}
 
         {(loading) ? (<div role="status" className='flex justify-center items-center'>
           <svg aria-hidden="true" className="inline w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-green" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
