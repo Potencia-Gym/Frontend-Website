@@ -19,7 +19,7 @@ const ExerciseCard = ({exerciseData, updateExerciseDone}) => {
         </div>
         {
           exerciseData?.completed ?
-          <div>COmpleted</div> 
+          <button onClick={()=>{updateExerciseDone(exerciseData.id)}} className='bg-yellow-600 px-4 py-2 rounded-lg text-xl hover:bg-green max-sm:text-lg max-sm:px-3 max-sm:py-1 transition-all duration-300'>Completed</button>
           :
           <button onClick={()=>{updateExerciseDone(exerciseData.id)}} className='bg-green px-4 py-2 rounded-lg text-xl hover:bg-yellow-600 max-sm:text-lg max-sm:px-3 max-sm:py-1 transition-all duration-300'>Done</button>
         }

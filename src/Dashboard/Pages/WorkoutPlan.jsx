@@ -29,11 +29,12 @@ const WorkoutPlan = () => {
     setBasicInfo(prev => ({ ...prev, [name]: value, uid: auth.currentUser.uid }));
   }
   
+  //fetch recommended data from ML backend
   const fetchFromML = useCallback(async () => {
     setLoading(true);
     const details = { uid: Info.uid, target_muscle: Object.values(Info.information.targetMuscle), level: Info.information.workoutLevel[0], type: Object.values(Info.information.workoutGoal) };
     console.log('send to ML: ', details);
-    const res = await fetch(url2 + 'api/exercises', {  //TO CHECK HOW TO GET FROM YASH UPDATED RECOMMENDATIONS.
+    const res = await fetch(url + 'exercises', {  //TO CHECK HOW TO GET FROM YASH UPDATED RECOMMENDATIONS.
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
@@ -50,12 +51,13 @@ const WorkoutPlan = () => {
     setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level }));
   }, [level, bodyPart, type]);
 
-  useEffect(() => {  // to get recommended data
+  useEffect(() => {  // to get recommended data (show form or recommended data? give if else condn here!!)
     //if(Info.information.targetMuscle != ""){
     fetchFromML();
     //}
   }, [fetchFromML])
 
+  // for useFetch hook used in form submission.
   const responseFunction = useCallback((res, status) => {
     console.log(res);
     if (status === 200) {
@@ -68,6 +70,7 @@ const WorkoutPlan = () => {
     }
   }, [dispatch])
 
+  // when user first adds all the customized info he needs like body part, goal type etc....
   const handleFormSubmit = async (e) => {
     setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodypart, workoutLevel: level }));
     e.preventDefault();
@@ -79,11 +82,11 @@ const WorkoutPlan = () => {
   console.log('redux: ', Info);
   console.log('day: ', recommendedData[selectedDay]);
 
-  //function to pass to ExerciseData for the Done implementation
+  //function to pass to ExerciseData for the Done implementation (when a user clicks on done on that exercise)
   const updateExerciseDone = async (exerciseId) =>{
     
     const details = {uid: auth.currentUser.uid, day:selectedDay, id:exerciseId};
-    const res = await fetch(url2 + 'api/exercises/mark', {
+    const res = await fetch(url + 'exercises/mark', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
