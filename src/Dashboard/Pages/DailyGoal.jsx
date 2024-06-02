@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import { AiOutlineFire } from "react-icons/ai";
 import { AiFillFire } from "react-icons/ai";
 import { AiFillCamera } from "react-icons/ai";
+import { useNavigate } from 'react-router-dom';
 
 const DailyGoal = () => {
   const [streakStatus, setStreakStatus] = useState(true);
+  const navigate = useNavigate();
 
   return (
     <div className='m-8 max-sm:m-5'>
@@ -31,7 +33,7 @@ const DailyGoal = () => {
           <h2 className=''>Jumping Jacks</h2>
           <div className='flex justify-center items-center gap-8 max-sm:gap-4'>
             <p>2 / 30</p>
-            <button className='bg-gray-500 flex justify-center items-center rounded-full p-3 text-white max-sm:p-2'><AiFillCamera className='text-3xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl' /></button>
+            <button onClick={()=>{navigate("../../stream")}} className='bg-gray-500 flex justify-center items-center rounded-full p-3 text-white max-sm:p-2'><AiFillCamera className='text-3xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl' /></button>
           </div>
         </div>
 
