@@ -28,7 +28,7 @@ const WorkoutPlan = () => {
     const value = e.target.value;
     setBasicInfo(prev => ({ ...prev, [name]: value, uid: auth.currentUser.uid }));
   }
-  
+
   //fetch recommended data from ML backend
   const fetchFromML = useCallback(async () => {
     setLoading(true);
@@ -39,14 +39,14 @@ const WorkoutPlan = () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({uid:auth.currentUser.uid})  //details
+      body: JSON.stringify({ uid: auth.currentUser.uid })  //details
     });
     const json = await res.json();
     setRecommendedData(json);
     setLoading(false);
     console.log('from ML: ', json);
   }, [])
-  
+
   useEffect(() => {
     setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level }));
   }, [level, bodyPart, type]);
@@ -55,6 +55,11 @@ const WorkoutPlan = () => {
     //if(Info.information.targetMuscle != ""){
     fetchFromML();
     //}
+
+    const weekday = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+    const d = new Date();
+    let day = weekday[d.getDay()];
+    setSelectedDay(day);
   }, [fetchFromML])
 
   // for useFetch hook used in form submission.
@@ -83,9 +88,9 @@ const WorkoutPlan = () => {
   console.log('day: ', recommendedData[selectedDay]);
 
   //function to pass to ExerciseData for the Done implementation (when a user clicks on done on that exercise)
-  const updateExerciseDone = async (exerciseId) =>{
-    
-    const details = {uid: auth.currentUser.uid, day:selectedDay, id:exerciseId};
+  const updateExerciseDone = async (exerciseId) => {
+
+    const details = { uid: auth.currentUser.uid, day: selectedDay, id: exerciseId };
     const res = await fetch(url + 'exercises/mark', {
       method: "POST",
       headers: {
@@ -95,12 +100,12 @@ const WorkoutPlan = () => {
     });
     const json = await res.json();
     setRecommendedData(json);
-    
+
     console.log('After Done clicked: ', json);
   }
 
   return (
-    <div className='py-8 px-16 w-full h-full'>
+    <div className='py-8 px-16 w-full h-full max-sm:px-8 max-md:px-10'>
       {/* <form onSubmit={handleFormSubmit} className="max-w-[1100px] mt-3 flex flex-col gap-4 justify-center flex-1">
         <div className="place-self-start">
           <h1 className='text-3xl max-sm:text-2xl mb-2 font-extrabold'>Let&apos;s personalize your fitness plan</h1>
@@ -111,24 +116,24 @@ const WorkoutPlan = () => {
           <div className='flex flex-col min-w-[280px] max-sm:w-full items-start justify-center'>
             <label className="text-gray-200 max-xl:min-w-[97px] max-[360px]:min-w-[70px]">Height (cm)</label>
             <input name='height' value={basicInfo.height || ""} onChange={handleChange} type='number' placeholder="Enter height"
-              className="px-2 py-2 w-1/3 rounded-lg bg-[#141414] mt-2 border-[0.5px] focus:border-green focus:bg-[#141414a9] focus:outline-none" />
+              className="px-2 py-2 w-1/3 max-sm:w-full rounded-lg bg-[#141414] mt-2 border-[0.5px] focus:border-green focus:bg-[#141414a9] focus:outline-none" />
           </div>
           <div className='flex flex-col min-w-[280px] max-sm:w-full items-start justify-center'>
             <label className="text-gray-200 max-xl:min-w-[97px] max-[360px]:min-w-[70px]">Weight (kg)</label>
             <input name='weight' value={basicInfo.weight || ""} onChange={handleChange} type='number' placeholder="Enter weight"
-              className=" px-2 py-2 w-1/3 rounded-lg bg-[#141414] mt-2 border focus:border-green focus:bg-[#141414a9] focus:outline-none" />
+              className=" px-2 py-2 w-1/3 max-sm:w-full rounded-lg bg-[#141414] mt-2 border focus:border-green focus:bg-[#141414a9] focus:outline-none" />
           </div>
           <div className='flex flex-col min-w-[280px] max-sm:w-full items-start justify-center'>
             <label className="text-gray-200 max-xl:min-w-[97px] max-[360px]:min-w-[70px]">Age</label>
             <input name='age' value={basicInfo.age || ""} onChange={handleChange} type='number' placeholder="Enter age"
-              className="px-2 py-2 w-1/3 rounded-lg bg-[#141414] mt-2 border focus:border-green focus:bg-[#141414a9] focus:outline-none" />
+              className="px-2 py-2 w-1/3 max-sm:w-full rounded-lg bg-[#141414] mt-2 border focus:border-green focus:bg-[#141414a9] focus:outline-none" />
           </div>
         </div>
 
         <div className=' min-w-[290px] max-sm:w-full flex flex-col gap-2 justify-center items-start'>
           <p className='font-bold text-lg'>What type of exercise do you prefer?</p>
           <Checkbox.Group
-            rootClassName='flex-col gap-4'
+            rootClassName='gap-4 flex-wrap'
             options={optionsList.type}
             onChange={(e) => { setType(e) }}
           />
@@ -152,11 +157,13 @@ const WorkoutPlan = () => {
         </div>
 
         <div className='w-full flex justify-end'>
-          <button type="submit" className="w-[11%] bg-green hover:bg-green/70 focus:bg-indigo-400 text-white font-semibold rounded-xl py-2.5 mt-4">
+          <button type="submit" className="px-2 mb-3 bg-green hover:bg-green/70 focus:bg-indigo-400 text-white font-semibold rounded-xl py-2.5 mt-4">
             Continue
           </button>
         </div>
       </form> */}
+
+
 
       <div className='flex flex-wrap flex-1 gap-10 justify-center items-center p-10 max-sm:p-2 max-w-[60vw] max-sm:max-w-[95vw] max-h-[90vh] bg-black rounded-xl overflow-y-scroll scrollbar border-y-[20px] border-black max-sm:border-y-[20px]'>
 
@@ -182,7 +189,7 @@ const WorkoutPlan = () => {
           <span className="sr-only">Loading...</span>
           <span className='text-4xl px-3 dark:text-white tracking-wide'>Loading...</span>
         </div>) : ""}
-        
+
       </div>
 
 

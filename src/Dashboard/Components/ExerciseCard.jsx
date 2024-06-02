@@ -5,8 +5,8 @@ const ExerciseCard = ({exerciseData, updateExerciseDone}) => {
   // if(exerciseData.completed) console.log("done bhai");
   return (
     <div className=' w-full bg-grey rounded-xl p-6 flex gap-6 max-sm:gap-4 flex-col border-2 border-green hover:bg-gray-900 transition-all duration-300'>
-      <h1 className='text-3xl max-sm:text-lg'>{exerciseData.name}</h1>
-      <div className='w-full flex gap-3 max-sm:gap-2 text-xs text-green max-sm:text-[9px]'>
+      <h1 className='text-3xl max-sm:text-xl'>{exerciseData.name}</h1>
+      <div className='w-full flex gap-3 max-sm:gap-2 text-xs text-green max-sm:text-[11px]'>
         <h6 className='bg-black p-2 rounded-2xl'>{exerciseData.level}</h6>
         <h6 className='bg-black p-2 rounded-2xl'>{exerciseData.type}</h6>
         <h6 className='bg-black p-2 rounded-2xl'>{exerciseData.target_muscle}</h6>
@@ -15,8 +15,8 @@ const ExerciseCard = ({exerciseData, updateExerciseDone}) => {
     
       <div className='flex justify-between items-center mt-2'>
         <div className='flex gap-3 items-end text-yellow-500'>
-          <h2 className='text-xs mb-1'>Reps</h2>
-          <h2 className='text-3xl max-sm:text-xl'>3 x 15</h2>
+          <h2 className='text-sm mb-1'>Reps</h2>
+          <h2 className='text-3xl max-sm:text-2xl'>3 x 15</h2>
         </div>
         {
           !exerciseData?.completed ?
