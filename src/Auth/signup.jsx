@@ -26,33 +26,13 @@ function Signup() {
     }
   }
 
-  const responseFunction = useCallback((res, status) => {
-    console.log(res);
-    if (status === 200) {
-      console.log("INFO HAI");
-      dispatch(userDetailsActions.updateUserDetails(res));
-      console.log('res: ', res);
-    }
-    else if(status === 201){
-      console.log("INFO NAHI HAI");
-    }
-  }, [dispatch])
-
   const fetchData = useCallback(async () => {
     setLoggingIn(true);
     const result = await getRedirectResult(auth);
-    setLoggingIn(false);
-    if (result) { 
-      // send 
-      let body ={name: auth.currentUser.displayName, email: auth.currentUser.email, uid: auth.currentUser.uid};
-      sendRequest('user', 'POST', body, responseFunction); //to fetch data from backend using customized useFetch hook
-      
-      const imp = { name: result.user.displayName, email: result.user.email }
-      dispatch(authActions.loginWithDetails(imp));
 
-      navigate('/dashboard/workout-plan');
-    }
-  }, [navigate, dispatch, auth, responseFunction, sendRequest])
+    if(result) navigate('/dashboard');
+    setLoggingIn(false);
+  }, [navigate, auth])
 
   useEffect(() => {
     fetchData();

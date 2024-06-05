@@ -13,7 +13,7 @@ import { BiDumbbell } from "react-icons/bi";
 const Sidebar = (prop) => {
   const [activeTab, setActiveTab] = useState("trackprogress");
   const navigate = useNavigate();
-  const name = useSelector((state)=>(state.userDetails.name));
+  const name = useSelector((state)=>(state.auth.name));
 
   const signOut1 = () => {
     signOut(auth).then(() => {

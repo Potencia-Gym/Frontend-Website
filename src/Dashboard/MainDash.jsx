@@ -14,42 +14,39 @@ function MainDash() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const [showSidebar, setShowSidebar] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const auth = getAuth();
   const navigate = useNavigate();
   const { sendRequest } = useFetch();  // useFetch is a customized hook.
 
   const responseFunction = useCallback((res, status) => {
-
     if (status === 200) {
       console.log("INFO HAI");
       dispatch(userDetailsActions.updateUserDetails(res));
-      console.log('res from firebase: ', res);
+      // console.log('res from firebase: ', res);
     }
     else if (status === 201) {
       console.log("INFO NAHI HAI");
     }
+    setLoading(false);
   }, [dispatch])
 
   const fetchData = useCallback(async () => {
-    // send 
+    // send
     let body = { name: auth.currentUser.displayName, email: auth.currentUser.email, uid: auth.currentUser.uid };
     sendRequest('user', 'POST', body, responseFunction); //to fetch data from backend using customized useFetch hook
-
-    navigate('/dashboard/workout-plan');
-  }, [navigate, auth, responseFunction, sendRequest])
+  }, [ auth, responseFunction, sendRequest])
 
   useEffect(() => {
-    setLoading(true);
     onAuthStateChanged(auth, (data) => {
       if (data) {
         dispatch(authActions.loginWithDetails({ name: data.displayName, email: data.email }));
         fetchData();
       }
       else {
-        dispatch(authActions.logout())
+        dispatch(authActions.logout());
+        setLoading(false);
       }
-      setLoading(false);
     })
   }, [dispatch, auth, fetchData])
 

@@ -12,6 +12,7 @@ import useFetch from '../../hooks/useFetch';
 const WorkoutPlan = () => {
   const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
   const auth = getAuth();
+  const [showForm, setShowForm] = useState(false);
   const [selectedDay, setSelectedDay] = useState('monday');
   const [loading, setLoading] = useState(false);
   const [basicInfo, setBasicInfo] = useState({});
@@ -30,10 +31,10 @@ const WorkoutPlan = () => {
   }
 
   //fetch recommended data from ML backend
-  const fetchFromML = useCallback(async () => {
+  const fetchFromDB = useCallback(async () => {
     setLoading(true);
-    const details = { uid: Info.uid, target_muscle: Object.values(Info.information.targetMuscle), level: Info.information.workoutLevel[0], type: Object.values(Info.information.workoutGoal) };
-    console.log('send to ML: ', details);
+    // const details = { uid: Info.uid, target_muscle: Object.values(Info.information.targetMuscle), level: Info.information.workoutLevel[0], type: Object.values(Info.information.workoutGoal) };
+    // console.log("imp pref details: ", details);
     const res = await fetch(url + 'exercises', {  //TO CHECK HOW TO GET FROM YASH UPDATED RECOMMENDATIONS.
       method: "POST",
       headers: {
@@ -45,47 +46,48 @@ const WorkoutPlan = () => {
     setRecommendedData(json);
     setLoading(false);
     console.log('from ML: ', json);
-  }, [])
+  }, [auth.currentUser.uid])
 
   useEffect(() => {
     setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level }));
   }, [level, bodyPart, type]);
 
   useEffect(() => {  // to get recommended data (show form or recommended data? give if else condn here!!)
-    //if(Info.information.targetMuscle != ""){
-    fetchFromML();
-    //}
+    if (Info.information.workoutLevel !== "") {
+      setShowForm(false);
+      fetchFromDB();
+      const weekday = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+      const d = new Date();
+      let day = weekday[d.getDay()];
+      setSelectedDay(day);
+    } else {
+      setShowForm(true);
+    }
 
-    const weekday = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-    const d = new Date();
-    let day = weekday[d.getDay()];
-    setSelectedDay(day);
-  }, [fetchFromML])
+  }, [fetchFromDB, Info.information.workoutLevel])
 
   // for useFetch hook used in form submission.
   const responseFunction = useCallback((res, status) => {
-    console.log(res);
+    // console.log(res);
     if (status === 200) {
       console.log("INFO HAI");
       dispatch(userDetailsActions.updateUserDetails(res));
-      console.log('res: ', res);
+      // console.log('res of preferences: ', res);
     }
     else if (status === 201) {
-      console.log("INFO NAHI HAI");
+      console.log("INFO NAHI HAI");  //when preferences are not there, show form
     }
   }, [dispatch])
 
   // when user first adds all the customized info he needs like body part, goal type etc....
   const handleFormSubmit = async (e) => {
-    setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodypart, workoutLevel: level }));
+    setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level }));
     e.preventDefault();
     console.log('value sent: ', basicInfo);
-
-    sendRequest('user/details', 'POST', basicInfo, responseFunction); //to fetch data from backend using customized useFetch hook
-
+    sendRequest('user/details', 'POST', basicInfo, responseFunction); //to fetch preference user data from backend using customized useFetch hook
   }
-  console.log('redux: ', Info);
-  console.log('day: ', recommendedData[selectedDay]);
+  // console.log('redux: ', Info);
+  // console.log('day: ', recommendedData[selectedDay]);
 
   //function to pass to ExerciseData for the Done implementation (when a user clicks on done on that exercise)
   const updateExerciseDone = async (exerciseId) => {
@@ -106,7 +108,8 @@ const WorkoutPlan = () => {
 
   return (
     <div className='py-8 px-16 w-full h-full max-sm:px-8 max-md:px-10'>
-      {/* <form onSubmit={handleFormSubmit} className="max-w-[1100px] mt-3 flex flex-col gap-4 justify-center flex-1">
+
+      {(showForm)?(<form onSubmit={handleFormSubmit} className="max-w-[1100px] mt-3 flex flex-col gap-4 justify-center flex-1">
         <div className="place-self-start">
           <h1 className='text-3xl max-sm:text-2xl mb-2 font-extrabold'>Let&apos;s personalize your fitness plan</h1>
           <h3 className='text-green mb-3'>We&apos;ll use these details to help you get the most out of your Potencia experience.</h3>
@@ -139,7 +142,7 @@ const WorkoutPlan = () => {
           />
         </div>
         <div className='min-w-[290px] max-sm:w-full flex flex-col gap-2 justify-center items-start'>
-          <p className='whitespace-nowrap font-bold text-lg'>Which body parts would you like to focus more on?</p>
+          <p className='font-bold text-lg'>Which body parts would you like to focus more on?</p>
           <Checkbox.Group
             rootClassName='gap-4 flex-wrap'
             onChange={(e) => setBodyPart(e)}
@@ -161,11 +164,11 @@ const WorkoutPlan = () => {
             Continue
           </button>
         </div>
-      </form> */}
+      </form>):""}
 
 
 
-      <div className='flex flex-wrap flex-1 gap-10 justify-center items-center mx-auto p-10 max-sm:p-2 max-w-[60vw] max-sm:max-w-[95vw] max-h-[90vh] bg-black rounded-xl overflow-y-scroll scrollbar border-y-[20px] border-black max-sm:border-y-[20px]'>
+      {(!showForm)?(<div className='flex flex-wrap flex-1 gap-10 justify-center items-center mx-auto p-10 max-sm:p-2 max-w-[60vw] max-sm:max-w-[95vw] max-h-[90vh] bg-black rounded-xl overflow-y-scroll scrollbar border-y-[20px] border-black max-sm:border-y-[20px]'>
 
         <div className='flex bg-grey rounded-xl shadow-md justify-start md:justify-center overflow-x-scroll mx-auto md:mx-12 scrollbar'>
           {days.map((val, idx) => (
@@ -190,8 +193,7 @@ const WorkoutPlan = () => {
           <span className='text-4xl px-3 dark:text-white tracking-wide'>Loading...</span>
         </div>) : ""}
 
-      </div>
-
+      </div>):""}
 
     </div>
   )
