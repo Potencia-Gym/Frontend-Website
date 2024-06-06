@@ -8,12 +8,13 @@ import { getAuth } from 'firebase/auth';
 
 const Profile = () => {
   const name = useSelector((state) => (state.auth.name));
+  const uid = useSelector((state)=>(state.userDetails.uid));
   const email = useSelector((state) => (state.auth.email));
   const info = useSelector((state) => (state.userDetails.information));
-  const [basicInfo, setBasicInfo] = useState({});
-  const [type, setType] = useState([]);
-  const [bodyPart, setBodyPart] = useState([]);
-  const [level, setLevel] = useState();
+  const [basicInfo, setBasicInfo] = useState(info);
+  const [type, setType] = useState(info.workoutGoal);
+  const [bodyPart, setBodyPart] = useState(info.targetMuscle);
+  const [level, setLevel] = useState(info.workoutLevel);
   const [file1, setFile1] = useState();
   const [file2, setFile2] = useState();
   const fileInputRef1 = useRef();
@@ -28,7 +29,7 @@ const Profile = () => {
     };
     reader.readAsDataURL((e.target.files[0]));
   }
-  console.log("info: ", info);
+
   useEffect(() => {   //upload to FIREBASE from here
     if (file1) {
       console.log("Base64 Image:", file1);
@@ -56,16 +57,13 @@ const Profile = () => {
   // }
 
   useEffect(() => {
-    setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level }));
-  }, [level, bodyPart, type]);
+    setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level, uid: uid }));
+  }, [level, bodyPart, type, uid]);
 
   // for useFetch hook used in form submission.
   const responseFunction = useCallback((res, status) => {
-    console.log(res);
     if (status === 200) {
-      console.log("INFO HAI");
       dispatch(userDetailsActions.updateUserDetails(res));
-      console.log('res: ', res);
     }
     else if (status === 201) {
       console.log("INFO NAHI HAI");
@@ -73,11 +71,9 @@ const Profile = () => {
   }, [dispatch])
 
   const handleFormSubmit = async (e) => {
-    setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level }));
+    setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level, uid: uid}));
     e.preventDefault();
-
     sendRequest('user/details', 'POST', basicInfo, responseFunction); //to fetch data from backend using customized useFetch hook
-
   }
 
   return (

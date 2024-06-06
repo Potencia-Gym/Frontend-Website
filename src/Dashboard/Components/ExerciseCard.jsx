@@ -6,7 +6,7 @@ const ExerciseCard = ({exerciseData, updateExerciseDone}) => {
   return (
     <div className=' w-full bg-grey rounded-xl p-6 flex gap-6 max-sm:gap-4 flex-col border-2 border-green hover:bg-gray-900 transition-all duration-300'>
       <h1 className='text-3xl max-sm:text-xl'>{exerciseData.name}</h1>
-      <div className='w-full flex gap-3 max-sm:gap-2 text-xs text-green max-sm:text-[11px]'>
+      <div className='w-full flex flex-wrap gap-3 max-sm:gap-2 text-xs text-green max-sm:text-[10px]'>
         <h6 className='bg-black p-2 rounded-2xl'>{exerciseData.level}</h6>
         <h6 className='bg-black p-2 rounded-2xl'>{exerciseData.type}</h6>
         <h6 className='bg-black p-2 rounded-2xl'>{exerciseData.target_muscle}</h6>

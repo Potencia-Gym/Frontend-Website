@@ -30,7 +30,7 @@ function Signup() {
     setLoggingIn(true);
     const result = await getRedirectResult(auth);
 
-    if(result) navigate('/dashboard');
+    if(result) navigate('/dashboard/workout-plan');
     setLoggingIn(false);
   }, [navigate, auth])
 
