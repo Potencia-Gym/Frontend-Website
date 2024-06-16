@@ -1,5 +1,5 @@
 import { Checkbox, Radio } from 'antd';
-import  { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import optionsList from '../constants';
 import useFetch from '../hooks/useFetch';
@@ -8,7 +8,7 @@ import { getAuth } from 'firebase/auth';
 
 const Profile = () => {
   const name = useSelector((state) => (state.auth.name));
-  const uid = useSelector((state)=>(state.userDetails.uid));
+  const uid = useSelector((state) => (state.userDetails.uid));
   const email = useSelector((state) => (state.auth.email));
   const info = useSelector((state) => (state.userDetails.information));
   const [basicInfo, setBasicInfo] = useState(info);
@@ -22,33 +22,59 @@ const Profile = () => {
   const dispatch = useDispatch();
   const { sendRequest } = useFetch();  // useFetch is a customized hook.
 
-  const handleChange1 = (e) => {  //convert uploaded img to base64
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFile1(reader.result);
-    };
-    reader.readAsDataURL((e.target.files[0]));
-  }
+  const handleChange1 = (e) => {
+    const file = e.target.files[0];
+    setFile1(URL.createObjectURL(file));
 
-  useEffect(() => {   //upload to FIREBASE from here
-    if (file1) {
-      console.log("Base64 Image:", file1);
+    const formData = new FormData();
+    formData.append('banner', file); // Match the field name in the backend
+    formData.append('uid', uid); // Include the user ID
+
+    uploadFile(formData, 'banner', '1');
+  };
+
+  const uploadFile = useCallback( async (formData, to, set) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/user/upload'+to, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) { // Check for successful response
+        throw new Error('Upload failed');
+      }
+
+      const data = await response.json();
+      (set === '1') ? setFile1((data.banner)) : setFile2((data.profile));
+      console.log(file2);
+    } catch (error) {
+      console.error('Upload failed:', error);
     }
-  }, [file1]);
+  }, []);
+
+
+  // useEffect(() => {   //upload to FIREBASE from here
+  //   if (file1) {
+  //     console.log("Base64 Image:", file1);
+  //   }
+  // }, [file1]);
 
   const handleChange2 = (e) => {  //convert uploaded img to base64
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFile2(reader.result);
-    };
-    reader.readAsDataURL((e.target.files[0]));
+    const file = e.target.files[0];
+    setFile2(URL.createObjectURL(file));
+
+    const formData = new FormData();
+    formData.append('profile', file); // Match the field name in the backend
+    formData.append('uid', uid); // Include the user ID
+
+    uploadFile(formData, 'profile', '2');
   }
 
-  useEffect(() => {   //upload to FIREBASE from here
-    if (file2) {
-      console.log("Base64 Image:", file2);
-    }
-  }, [file2]);
+  // useEffect(() => {   //upload to FIREBASE from here
+  //   if (file2) {
+  //     console.log("Base64 Image:", file2);
+  //   }
+  // }, [file2]);
 
   // const handleChange = (e) => {
   //   const name = e.target.name;
@@ -71,7 +97,7 @@ const Profile = () => {
   }, [dispatch])
 
   const handleFormSubmit = async (e) => {
-    setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level, uid: uid}));
+    setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level, uid: uid }));
     e.preventDefault();
     sendRequest('user/details', 'POST', basicInfo, responseFunction); //to fetch data from backend using customized useFetch hook
   }
@@ -102,12 +128,12 @@ const Profile = () => {
       </div>
 
       <div className=' bg-black p-8 mt-12 mx-auto rounded-2xl max-w-[1100px] max-sm:p-3'>
-      <form onSubmit={handleFormSubmit} className="max-w-[1100px] mt-3 flex flex-col gap-4 justify-center flex-1">
-        <div className="place-self-start">
-          <h1 className='text-3xl max-sm:text-2xl mb-2 font-bold text-green'>Your Preferences</h1>
-        </div>
+        <form onSubmit={handleFormSubmit} className="max-w-[1100px] mt-3 flex flex-col gap-4 justify-center flex-1">
+          <div className="place-self-start">
+            <h1 className='text-3xl max-sm:text-2xl mb-2 font-bold text-green'>Your Preferences</h1>
+          </div>
 
-        {/* <div className='flex gap-5 flex-1 flex-col w-full justify-center'>
+          {/* <div className='flex gap-5 flex-1 flex-col w-full justify-center'>
           <div className='flex flex-col min-w-[280px] max-sm:w-full items-start justify-center'>
             <label className="text-gray-200 max-xl:min-w-[97px] max-[360px]:min-w-[70px]">Height (cm)</label>
             <input name='height' value={basicInfo.height || ""} onChange={handleChange} type='number' placeholder="Enter height"
@@ -125,41 +151,41 @@ const Profile = () => {
           </div>
         </div> */}
 
-        <div className=' min-w-[290px] max-sm:w-full flex flex-col gap-2 justify-center items-start'>
-          <p className='font-bold text-lg'>What type of exercise do you prefer?</p>
-          <Checkbox.Group
-            rootClassName='gap-4 flex-wrap'
-            options={optionsList.type}
-            onChange={(e) => { setType(e) }}
-            defaultValue={Object.values(info.workoutGoal)}
-          />
-        </div>
-        <div className='min-w-[290px] max-sm:w-full flex flex-col gap-2 justify-center items-start mt-4'>
-          <p className=' font-bold text-lg'>Which body parts would you like to focus more on?</p>
-          <Checkbox.Group
-            rootClassName='gap-4 flex-wrap'
-            onChange={(e) => setBodyPart(e)}
-            options={optionsList.body}
-            defaultValue={Object.values(info.targetMuscle)}
-          />
-        </div>
-        <div className='min-w-[290px] max-sm:w-full flex flex-col gap-2 justify-center items-start mt-4'>
-          <p className='font-semibold text-lg'>Fitness Level</p>
-          <Radio.Group
-            className='flex-col gap-4 ant-radio-group'
-            rootClassName='flex gap-4 flex-col'
-            options={optionsList.level}
-            onChange={(e) => setLevel(e.target.value)}
-            defaultValue={info.workoutLevel}
-          />
-        </div>
+          <div className=' min-w-[290px] max-sm:w-full flex flex-col gap-2 justify-center items-start'>
+            <p className='font-bold text-lg'>What type of exercise do you prefer?</p>
+            <Checkbox.Group
+              rootClassName='gap-4 flex-wrap'
+              options={optionsList.type}
+              onChange={(e) => { setType(e) }}
+              defaultValue={Object.values(info.workoutGoal)}
+            />
+          </div>
+          <div className='min-w-[290px] max-sm:w-full flex flex-col gap-2 justify-center items-start mt-4'>
+            <p className=' font-bold text-lg'>Which body parts would you like to focus more on?</p>
+            <Checkbox.Group
+              rootClassName='gap-4 flex-wrap'
+              onChange={(e) => setBodyPart(e)}
+              options={optionsList.body}
+              defaultValue={Object.values(info.targetMuscle)}
+            />
+          </div>
+          <div className='min-w-[290px] max-sm:w-full flex flex-col gap-2 justify-center items-start mt-4'>
+            <p className='font-semibold text-lg'>Fitness Level</p>
+            <Radio.Group
+              className='flex-col gap-4 ant-radio-group'
+              rootClassName='flex gap-4 flex-col'
+              options={optionsList.level}
+              onChange={(e) => setLevel(e.target.value)}
+              defaultValue={info.workoutLevel}
+            />
+          </div>
 
-        <div className='w-full flex justify-end'>
-          <button type="submit" className="px-5 mb-3 bg-green hover:bg-green/70 text-white font-semibold rounded-xl py-3 mt-4">
-            Save
-          </button>
-        </div>
-      </form>
+          <div className='w-full flex justify-end'>
+            <button type="submit" className="px-5 mb-3 bg-green hover:bg-green/70 text-white font-semibold rounded-xl py-3 mt-4">
+              Save
+            </button>
+          </div>
+        </form>
       </div>
 
     </div>

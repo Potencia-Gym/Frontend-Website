@@ -86,6 +86,7 @@ const WorkoutPlan = () => {
   //function to pass to ExerciseData for the Done implementation (when a user clicks on done on that exercise)
   const updateExerciseDone = async (exerciseId) => {
     const details = { uid: auth.currentUser.uid, day: selectedDay, id: exerciseId };
+    console.log("sent: ", details);
     const res = await fetch(url + 'exercises/mark', {
       method: "POST",
       headers: {
@@ -95,8 +96,7 @@ const WorkoutPlan = () => {
     });
     const json = await res.json();
     setRecommendedData(json);
-
-    console.log('After Done clicked: ', json);
+    console.log("rec: ", json);
   }
 
   // to get from ML, redo the recommendation (rerun of ML model) (TESTING OF THIS ROUTE IS LEFT)
