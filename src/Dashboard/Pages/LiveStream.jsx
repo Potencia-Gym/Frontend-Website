@@ -8,6 +8,8 @@ const LiveStream = () => {
 	const [data, setData] = useState(null);
 	const canvasRef = useRef(null);
 	const [stream, setStream] = useState(null);
+	const [leftCount, setLeftCount] = useState(0);
+	const [rightCount, setRightCount] = useState(0);
 
 	useEffect(() => {
 		socket.connect();
@@ -18,7 +20,6 @@ const LiveStream = () => {
 				setStream(stream);
 			})
 		function handleConnect() {
-			console.log("fsfse");
 			setIsConnected(true);
 		}
 
@@ -27,7 +28,9 @@ const LiveStream = () => {
 		}
 
 		function handleMessage(data) {
-			console.log(data);
+			console.log("Received message:", data);
+			setLeftCount(data.left_count);
+			setRightCount(data.right_count);
 		}
 		//stablish WebSocket connection
 		socket.on('connect', handleConnect);
@@ -48,45 +51,29 @@ const LiveStream = () => {
 		const ctx = canvas?.getContext('2d');
 
 		// Set the canvas dimensions to control the quality
-		canvas.width = 900; // Adjust as needed
-		canvas.height = 700; // Adjust as needed
+		canvas.width = 700; // Adjust as needed
+		canvas.height = 500; // Adjust as needed
 
 		// Draw the current video frame onto the canvas
 		ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 		const imgurl = canvas.toDataURL('image/jpeg', 0.8);
-		socket.emit('send_frame', imgurl);
-		// 		const mediaRecorder = new MediaRecorder(stream);
-		// 		console.log("mediaRecorder : ", mediaRecorder);
-		// 		mediaRecorder.start(10000);
-		// 		mediaRecorder.ondataavailable = (e) => {
-		// 			var reader = new FileReader();
-		// 			reader.readAsDataURL(e.data);
-		// 			reader.onloadend = function () {
-		// 				var base64data = reader.result;
-		// 				setData(base64data);
-		// 				// console.log(base64data);
-		// 				// stream(socket).emit('stream', stream, base64data);
-		// 				// socket.emit('stream', base64data)
-		// 			}
-		// 		};
-		// 		mediaRecorder.onstart = () => {
-		// 			console.log('recording started')
-		// 		}
-		// 	})
+		const imgurlModified = imgurl.slice(23);
+		socket.emit('send_frame', imgurlModified);
 	}
 
 	useEffect(() => {
 		setInterval(() => {
 			capture();
-		}, 100);
+		}, 300);
 	}, [])
 
 	return (
 		<div>
 			<h1>Connection to server: {isConnected ? 'true' : 'false'}</h1>
 			<video ref={videoRef} autoPlay />
-			<canvas ref={canvasRef}></canvas>
-			<div className="">DATA : {socket.id}</div>
+			<canvas className="hidden" ref={canvasRef}></canvas>
+			<div>Left Arm: {leftCount}</div>
+			<div>Left Arm: {rightCount}</div>
 		</div>
 	)
 }

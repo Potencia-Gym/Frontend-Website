@@ -5,6 +5,7 @@ import optionsList from '../constants';
 import useFetch from '../hooks/useFetch';
 import { userDetailsActions } from '../store/userdetails-slice';
 import { getAuth } from 'firebase/auth';
+import url from '../url'
 
 const Profile = () => {
   const name = useSelector((state) => (state.auth.name));
@@ -24,7 +25,7 @@ const Profile = () => {
 
   const handleChange1 = (e) => {
     const file = e.target.files[0];
-    setFile1(URL.createObjectURL(file));
+    //setFile1(URL.createObjectURL(file));
 
     const formData = new FormData();
     formData.append('banner', file); // Match the field name in the backend
@@ -35,7 +36,7 @@ const Profile = () => {
 
   const uploadFile = useCallback( async (formData, to, set) => {
     try {
-      const response = await fetch('http://localhost:3000/api/user/upload'+to, {
+      const response = await fetch(url + 'user/upload'+to, {
         method: 'POST',
         body: formData,
       });
@@ -45,12 +46,13 @@ const Profile = () => {
       }
 
       const data = await response.json();
-      (set === '1') ? setFile1((data.banner)) : setFile2((data.profile));
+      console.log(data);
+      setFile2(data.profile);
       console.log(file2);
-    } catch (error) {
+    } catch (error){
       console.error('Upload failed:', error);
     }
-  }, []);
+  }, [setFile2, file2]);
 
 
   // useEffect(() => {   //upload to FIREBASE from here
@@ -61,7 +63,7 @@ const Profile = () => {
 
   const handleChange2 = (e) => {  //convert uploaded img to base64
     const file = e.target.files[0];
-    setFile2(URL.createObjectURL(file));
+    //setFile2(URL.createObjectURL(file));
 
     const formData = new FormData();
     formData.append('profile', file); // Match the field name in the backend
