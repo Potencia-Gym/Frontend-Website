@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { FiLogOut } from "react-icons/fi";
 import { GoGoal } from "react-icons/go";
 import { BiDumbbell } from "react-icons/bi";
+import { TbCameraSearch } from "react-icons/tb";
 
 const Sidebar = (prop) => {
   const [activeTab, setActiveTab] = useState("trackprogress");
@@ -50,6 +51,17 @@ const Sidebar = (prop) => {
               >
                 <BiDumbbell className='mr-3 text-3xl'/>
                 <span className="pl-3">Workout Plan</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to={'equipment-detect'}
+                className={({ isActive }) =>
+                  isActive ? "flex items-center p-2 rounded-lg bg-gray-100 text-green dark:text-green dark:bg-gray-700 group" : "flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 hover:text-green dark:hover:text-green dark:hover:bg-gray-700 group"
+                }
+              // className="flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 hover:text-green dark:hover:text-green dark:hover:bg-gray-700 group"
+              >
+                <TbCameraSearch className='mr-3 text-3xl'/>
+                <span className="pl-3">Detect Equipment</span>
               </NavLink>
             </li>
           </ul>

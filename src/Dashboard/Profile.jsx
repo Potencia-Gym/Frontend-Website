@@ -23,66 +23,44 @@ const Profile = () => {
   const dispatch = useDispatch();
   const { sendRequest } = useFetch();  // useFetch is a customized hook.
 
-  const handleChange1 = (e) => {
+  //to upload banner photo to database
+  const handleChange1 = async (e) => {
     const file = e.target.files[0];
-    //setFile1(URL.createObjectURL(file));
 
     const formData = new FormData();
-    formData.append('banner', file); // Match the field name in the backend
-    formData.append('uid', uid); // Include the user ID
+    formData.append('banner', file);
+    formData.append('uid', uid);
 
-    uploadFile(formData, 'banner', '1');
+    const res = await fetch(url + 'user/uploadbanner', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await res.json();
+    console.log(data);
+    setFile1(data.profile);
+    console.log(file1);
   };
 
-  const uploadFile = useCallback( async (formData, to, set) => {
-    try {
-      const response = await fetch(url + 'user/upload'+to, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) { // Check for successful response
-        throw new Error('Upload failed');
-      }
-
-      const data = await response.json();
-      console.log(data);
-      setFile2(data.profile);
-      console.log(file2);
-    } catch (error){
-      console.error('Upload failed:', error);
-    }
-  }, [setFile2, file2]);
-
-
-  // useEffect(() => {   //upload to FIREBASE from here
-  //   if (file1) {
-  //     console.log("Base64 Image:", file1);
-  //   }
-  // }, [file1]);
-
-  const handleChange2 = (e) => {  //convert uploaded img to base64
+  //to upload profile photo to database
+  const handleChange2 = async (e) => { 
     const file = e.target.files[0];
-    //setFile2(URL.createObjectURL(file));
+    if(!file) return;
 
     const formData = new FormData();
-    formData.append('profile', file); // Match the field name in the backend
-    formData.append('uid', uid); // Include the user ID
+    formData.append('profile', file);
+    formData.append('uid', uid);
 
-    uploadFile(formData, 'profile', '2');
+    const res = await fetch(url + 'user/uploadprofile', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await res.json();
+    console.log(data);
+    setFile2(data.profile);
+    console.log(file2);
   }
-
-  // useEffect(() => {   //upload to FIREBASE from here
-  //   if (file2) {
-  //     console.log("Base64 Image:", file2);
-  //   }
-  // }, [file2]);
-
-  // const handleChange = (e) => {
-  //   const name = e.target.name;
-  //   const value = e.target.value;
-  //   setBasicInfo(prev => ({ ...prev, [name]: value, uid: auth.currentUser.uid }));
-  // }
 
   useEffect(() => {
     setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level, uid: uid }));

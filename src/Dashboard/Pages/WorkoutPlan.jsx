@@ -102,7 +102,7 @@ const WorkoutPlan = () => {
   // to get from ML, redo the recommendation (rerun of ML model) (TESTING OF THIS ROUTE IS LEFT)
   const handleRefreshButton = async () => {
     setLoading(true);
-    const details = { uid: Info.uid, target_muscle: Object.values(Info.information.targetMuscle), level: Info.information.workoutLevel[0], type: Object.values(Info.information.workoutGoal) };
+    const details = { uid: Info.uid, target_muscle: Object.values(Info.information.targetMuscle), level: Info.information.workoutLevel, type: Object.values(Info.information.workoutGoal) };
     const res = await fetch(url + 'exercises/recommendation', { 
       method: "POST",
       headers: {

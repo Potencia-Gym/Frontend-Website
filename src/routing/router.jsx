@@ -4,7 +4,7 @@ import Dashboard from '../Dashboard/MainDash'
 import { Login, Signup } from "../Auth";
 import WorkoutPlan from "../Dashboard/Pages/WorkoutPlan";
 import DailyGoal from "../Dashboard/Pages/DailyGoal";
-import DietPlanner from "../Dashboard/Pages/DietPlanner";
+import EquipmentDetect from "../Dashboard/Pages/EquipmentDetect";
 import LiveStream from "../Dashboard/Pages/LiveStream";
 import Profile from "../Dashboard/Profile";
 
@@ -34,14 +34,14 @@ const router = createBrowserRouter([
                 element: <DailyGoal />,
             },
             {
+                path: 'equipment-detect',
+                element: <EquipmentDetect />,
+            },
+            {
                 path: 'profile',
                 element: <Profile />,
             }
         ]
-    },
-    {
-        path: '/stream',
-        element: <LiveStream />,
     }
 ]);
 

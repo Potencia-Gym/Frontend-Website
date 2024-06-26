@@ -3,9 +3,12 @@ import { AiOutlineFire } from "react-icons/ai";
 import { AiFillFire } from "react-icons/ai";
 import { AiFillCamera } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
+import { Button, Modal } from 'antd';
+import LiveStream from './LiveStream';
 
 const DailyGoal = () => {
   const [streakStatus, setStreakStatus] = useState(true);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -33,7 +36,20 @@ const DailyGoal = () => {
           <h2 className=''>Jumping Jacks</h2>
           <div className='flex justify-center items-center gap-8 max-sm:gap-4'>
             <p>2 / 30</p>
-            <button onClick={()=>{navigate("../../stream")}} className='bg-gray-500 flex justify-center items-center rounded-full p-3 text-white max-sm:p-2'><AiFillCamera className='text-3xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl' /></button>
+            <Button type="primary" onClick={() => setOpen(true)} className='bg-gray-500 flex justify-center items-center rounded-full py-5 px-3 text-white max-sm:p-2'>
+              <AiFillCamera className='text-3xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl' />
+            </Button>
+            <Modal
+              centered
+              open={open}
+              onOk={() => setOpen(false)}
+              okText={"Close"}
+              onCancel={() => setOpen(false)}
+              width={1000}
+            >
+              <LiveStream />
+            </Modal>
+            {/* <button onClick={() => { navigate("../../stream") }} ></button> */}
           </div>
         </div>
 

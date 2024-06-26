@@ -1,81 +1,98 @@
-import { useEffect, useState } from "react";
-import { useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { socket } from "../../socket";
 
 const LiveStream = () => {
-	const videoRef = useRef(null);
-	const [isConnected, setIsConnected] = useState(socket.connected);
-	const [data, setData] = useState(null);
-	const canvasRef = useRef(null);
-	const [stream, setStream] = useState(null);
-	const [leftCount, setLeftCount] = useState(0);
-	const [rightCount, setRightCount] = useState(0);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [leftCount, setLeftCount] = useState(0);
+  const [rightCount, setRightCount] = useState(0);
+  // const myStream = useRef(null);
+  // console.log(myStream.current);
+  useEffect(() => {
+    // Connect to the socket server
+    socket.connect();
+    var myStream;
+    // Get the user's media stream
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        videoRef.current.srcObject = stream;
+        myStream = stream;
+      });
 
-	useEffect(() => {
-		socket.connect();
-		navigator.mediaDevices
-			.getUserMedia({ video: true })
-			.then((stream) => {
-				videoRef.current.srcObject = stream;
-				setStream(stream);
-			})
-		function handleConnect() {
-			setIsConnected(true);
-		}
+    // Handlers for socket events
+    const handleConnect = () => setIsConnected(true);
+    const handleDisconnect = () => setIsConnected(false);
+    const handleMessage = (data) => {
+      console.log("Received message:", data);
+      setLeftCount(data.left_count);
+      setRightCount(data.right_count);
+    };
 
-		function handleDisconnect() {
-			setIsConnected(false);
-		}
+    // Attach socket event listeners
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
+    socket.on('message', handleMessage);
+    // Cleanup function to stop the camera and disconnect the socket
+    return () => {
+      socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
+      socket.off('message', handleMessage);
+      socket.disconnect();
 
-		function handleMessage(data) {
-			console.log("Received message:", data);
-			setLeftCount(data.left_count);
-			setRightCount(data.right_count);
-		}
-		//stablish WebSocket connection
-		socket.on('connect', handleConnect);
-		socket.on('disconnect', handleDisconnect);
-		socket.on('message', handleMessage);
+      console.log("hiiiii");
+      // Stop all tracks in the video stream
+      if (myStream) {
+        myStream.getTracks().forEach(function (track) {
+          track.stop();
+        });
+      }
+    };
+  }, []);
 
-		// Clean up event listeners when component unmounts
-		return () => {
-			socket.off('connect', handleConnect);
-			socket.off('disconnect', handleDisconnect);
-			socket.off('message', handleMessage);
-		};
-	}, []);
+  const capture = () => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
 
-	const capture = () => {
-		const video = videoRef.current
-		const canvas = canvasRef?.current;
-		const ctx = canvas?.getContext('2d');
+    // Set the canvas dimensions to control the quality
+    canvas.width = 900; // Adjust as needed
+    canvas.height = 700; // Adjust as needed
 
-		// Set the canvas dimensions to control the quality
-		canvas.width = 700; // Adjust as needed
-		canvas.height = 500; // Adjust as needed
+    // Draw the current video frame onto the canvas
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imgurl = canvas.toDataURL('image/jpeg', 0.8);
+    const imgurlModified = imgurl.slice(23);
+    socket.emit('send_frame', imgurlModified);
+  }
 
-		// Draw the current video frame onto the canvas
-		ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-		const imgurl = canvas.toDataURL('image/jpeg', 0.8);
-		const imgurlModified = imgurl.slice(23);
-		socket.emit('send_frame', imgurlModified);
-	}
+  useEffect(() => {
+    const interval = setInterval(() => {
+      capture();
+    }, 100);
 
-	useEffect(() => {
-		setInterval(() => {
-			capture();
-		}, 300);
-	}, [])
+    // Cleanup the interval on component unmount
+    return () => {
+      clearInterval(interval);
 
-	return (
-		<div>
-			<h1>Connection to server: {isConnected ? 'true' : 'false'}</h1>
-			<video ref={videoRef} autoPlay />
-			<canvas className="hidden" ref={canvasRef}></canvas>
-			<div>Left Arm: {leftCount}</div>
-			<div>Left Arm: {rightCount}</div>
-		</div>
-	)
+      // Stop all tracks in the video stream
+      if (myStream.current) {
+        myStream.current.getTracks().forEach(function (track) {
+          track.stop();
+        });
+      }
+    }
+  }, []);
+
+  return (
+    <div>
+      <h1>Connection to server: {isConnected ? 'true' : 'false'}</h1>
+      <video ref={videoRef} autoPlay />
+      <canvas ref={canvasRef} className="hidden"></canvas>
+      <div>Left Arm: {leftCount}</div>
+      <div>Right Arm: {rightCount}</div>
+    </div>
+  );
 }
 
-export default LiveStream
+export default LiveStream;
