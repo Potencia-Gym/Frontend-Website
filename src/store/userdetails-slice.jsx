@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const userDetailsSlice = createSlice({
     name:'userDetails',
-    initialState:{uid:"", name:"", email:"",information:{height:"", weight:"", age:"", gender:"", workoutGoal:"", targetMuscle:"", workoutLevel:""}},
+    initialState:{uid:"", name:"", email:"",information:{height:"", weight:"", age:"", gender:"", workoutGoal:"", targetMuscle:"", workoutLevel:""}, bannerImage:null, profileImage:null},
     reducers:{
         updateUserDetails(state, action){
             state.uid = action.payload.uid || "";
@@ -14,6 +14,8 @@ const userDetailsSlice = createSlice({
             state.information.workoutGoal  = action.payload.information.workoutGoal || "";
             state.information.targetMuscle  = action.payload.information.targetMuscle || "";
             state.information.workoutLevel  = action.payload.information.workoutLevel || "";
+            state.bannerImage  = action.payload.bannerImage || null;
+            state.profileImage  = action.payload.profileImage || null;
         }
     },
 });
