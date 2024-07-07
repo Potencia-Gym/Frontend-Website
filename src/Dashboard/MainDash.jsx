@@ -21,9 +21,7 @@ function MainDash() {
 
   const responseFunction = useCallback((res, status) => {
     if (status === 200) {
-      console.log("INFO HAI");
       dispatch(userDetailsActions.updateUserDetails(res));
-      // console.log('res from firebase: ', res);
     }
     else if (status === 201) {
       console.log("INFO NAHI HAI");

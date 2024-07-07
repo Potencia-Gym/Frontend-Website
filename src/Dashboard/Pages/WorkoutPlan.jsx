@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
 import optionsList from "../../constants";
-import { Checkbox, Radio, Select, Space } from "antd";
+import { Checkbox, Radio} from "antd";
 import { getAuth } from "firebase/auth";
-import url, { url2 } from "../../url";
+import url from "../../url";
 import { useDispatch, useSelector } from "react-redux";
 import { userDetailsActions } from "../../store/userdetails-slice";
 import ExerciseCard from "../Components/ExerciseCard";

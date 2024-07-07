@@ -12,12 +12,14 @@ const Profile = () => {
   const uid = useSelector((state) => (state.userDetails.uid));
   const email = useSelector((state) => (state.auth.email));
   const info = useSelector((state) => (state.userDetails.information));
+  const profileLink = useSelector((state) => (state.userDetails.profileImage));
+  const bannerLink = useSelector((state) => (state.userDetails.bannerImage));
   const [basicInfo, setBasicInfo] = useState(info);
   const [type, setType] = useState(info.workoutGoal);
   const [bodyPart, setBodyPart] = useState(info.targetMuscle);
   const [level, setLevel] = useState(info.workoutLevel);
-  const [file1, setFile1] = useState();
-  const [file2, setFile2] = useState();
+  const [file1, setFile1] = useState(bannerLink);
+  const [file2, setFile2] = useState(profileLink);
   const fileInputRef1 = useRef();
   const fileInputRef2 = useRef();
   const dispatch = useDispatch();
@@ -37,15 +39,15 @@ const Profile = () => {
     });
 
     const data = await res.json();
-    console.log(data);
-    setFile1(data.profile);
-    console.log(file1);
+    const urlObj = new URL(data.banner);
+    urlObj.searchParams.append("time", new Date().getTime());
+    setFile1(urlObj.toString());
   };
 
   //to upload profile photo to database
-  const handleChange2 = async (e) => { 
+  const handleChange2 = async (e) => {
     const file = e.target.files[0];
-    if(!file) return;
+    if (!file) return;
 
     const formData = new FormData();
     formData.append('profile', file);
@@ -57,10 +59,11 @@ const Profile = () => {
     });
 
     const data = await res.json();
-    console.log(data);
-    setFile2(data.profile);
-    console.log(file2);
+    const urlObj = new URL(data.profile);
+    urlObj.searchParams.append("time", new Date().getTime());
+    setFile2(urlObj.toString());
   }
+  
 
   useEffect(() => {
     setBasicInfo(prev => ({ ...prev, workoutGoal: type, targetMuscle: bodyPart, workoutLevel: level, uid: uid }));
@@ -90,14 +93,14 @@ const Profile = () => {
         <div className='w-full h-[200px] bg-gray-700 rounded-xl relative max-sm:h-[150px]'>
           <button onClick={() => fileInputRef1.current.click()} className='w-full h-full absolute'></button>
           <input onChange={handleChange1} multiple={false} ref={fileInputRef1} type='file' hidden />
-          {(file1) ? (<img src={file1} className='h-full w-full rounded-xl' />) : ""}
+          {(file1) ? (<img src={file1} className='h-full w-full rounded-xl' onError={(e)=>{e.target.src = new URL(file1).origin + new URL(file1).pathname}}/>) : ""}
         </div>
 
         <div className='flex gap-6'>
           <div className='ml-6 w-[110px] h-[110px] rounded-full bg-gray-900 relative bottom-11 max-sm:w-[80px] max-sm:h-[80px] max-sm:bottom-6'>
             <button onClick={() => fileInputRef2.current.click()} className='w-full h-full absolute'></button>
             <input onChange={handleChange2} multiple={false} ref={fileInputRef2} type='file' hidden />
-            {(file2) ? (<img src={file2} className='h-full w-full rounded-full' />) : ""}
+            {(file2) ? (<img src={file2} className='h-full w-full rounded-full' onError={(e)=>{e.target.src = new URL(file2).origin + new URL(file2).pathname}}/>) : ""}
           </div>
           <div>
             <h1 className='text-3xl mt-1 max-sm:text-xl text-green font-bold'>{name}</h1>
