@@ -42,6 +42,10 @@ const router = createBrowserRouter([
                 element: <Profile />,
             }
         ]
+    },
+    {
+        path: '/stream',
+        element: <LiveStream />
     }
 ]);
 

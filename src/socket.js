@@ -1,9 +1,10 @@
 import { io } from 'socket.io-client';
 
 // "undefined" means the URL will be computed from the `window.location` object
-const URL = 'https://d7bz6z99-8000.inc1.devtunnels.ms/';
+const URL = "https://d7bz6z99-8000.inc1.devtunnels.ms";
 // const URL = 'localhost:5000';
 
 export const socket = io(URL, {
-	autoConnect: false
+	autoConnect: false,
+	transports: ["websocket"]
 });

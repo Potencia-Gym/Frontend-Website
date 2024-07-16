@@ -5,7 +5,7 @@ import EquipmentCard from '../Components/EquipmentCard'
 const EquipmentDetect = () => {
   const photoUploadRef = useRef();
   const [photo, setPhoto] = useState();
-  const [equipmentData, setEquipmentData] = useState(tmp.workout_plan);  //change to null
+  const [equipmentData, setEquipmentData] = useState(null);  //change to null
 
   const handleChange = async (e) => {
     const file = e.target.files[0];
@@ -22,7 +22,8 @@ const EquipmentDetect = () => {
       });
 
       const data = await response.json();
-      setEquipmentData(tmp.workout_plan);  //replace tmp to data
+      console.log(data);
+      setEquipmentData(data.workout_plan);  //replace tmp to data
     } catch (error) {
       console.error('Error uploading image:', error);
     }

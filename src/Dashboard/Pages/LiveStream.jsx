@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { socket } from "../../socket";
 
-const LiveStream = () => {
+const LiveStream = ({updateCount}) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -20,9 +20,10 @@ const LiveStream = () => {
     const handleConnect = () => setIsConnected(true);
     const handleDisconnect = () => setIsConnected(false);
     const handleMessage = (data) => {
-      console.log("Received message:", data);
-      setLeftCount(data.left_count);
-      setRightCount(data.right_count);
+      var a=data.split(" ")
+      setLeftCount(a[0]);
+      setRightCount(a[1]);
+      updateCount(Math.max(a[0], a[1]));
     };
 
     // Attach socket event listeners
@@ -36,12 +37,11 @@ const LiveStream = () => {
       socket.off("message", handleMessage);
       // socket.disconnect();
       // socket.close();
-      console.log("hiiiii");
       // Stop all tracks in the video stream
     };
   }, []);
 
-  console.log(videoRef?.current?.srcObject?.getTracks());
+  // console.log(videoRef?.current?.srcObject?.getTracks());
 
   const stopCapturing = () => {
     // Stop all tracks in the video stream
@@ -76,7 +76,7 @@ const LiveStream = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       capture();
-    }, 100);
+    }, 200);
 
     // Cleanup the interval on component unmount
     return () => {
