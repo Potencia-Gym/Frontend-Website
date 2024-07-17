@@ -1,18 +1,45 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { AiOutlineFire } from "react-icons/ai";
 import { AiFillFire } from "react-icons/ai";
 import { AiFillCamera } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal } from 'antd';
 import LiveStream from './LiveStream';
+import url from '../../url';
+import { getAuth } from 'firebase/auth';
 
 const DailyGoal = () => {
+  const auth = getAuth();
+  const uid = auth.currentUser.uid;
   const [streakStatus, setStreakStatus] = useState(true);
+  const [streakCount, setStreakCount] = useState(null);
   const [open, setOpen] = useState(0);
   const [bicepCount, setBicepCount] = useState(0);
   const [jackCount, setJackCount] = useState(0);
   const [deadCount, setDeadCount] = useState(0);
   const navigate = useNavigate();
+
+  const getStreakData = useCallback(async ()=>{
+    const res = await fetch(url + 'user/streak', {
+      method:'GET',
+      headers:{uid:uid, "content-type":"application/json"}
+    });
+    const data = await res.json();
+    if(data){
+      setBicepCount(data.exercise1);
+      setJackCount(data.exercise2);
+      setDeadCount(data.exercise3);
+      setStreakCount(data.streakCount);
+    } else {
+      setBicepCount(0);
+      setJackCount(0);
+      setDeadCount(0);
+    }
+  }, [uid])
+
+  useEffect(()=>{
+    getStreakData();
+  }, [getStreakData])
 
   const updateBicepCount = (a) => {
     setBicepCount(a);
@@ -26,8 +53,29 @@ const DailyGoal = () => {
     setDeadCount(a);
   }
 
-  const sendCount = () => {
+  const sendCount = async () => {
     setOpen(0);
+    await fetch(url + 'user/streak', {
+      method:'POST',
+      body:JSON.stringify({exercise1:bicepCount, exercise2:jackCount, exercise3:deadCount}),
+      headers:{uid:uid, "content-type":"application/json"}
+    });
+
+    const res = await fetch(url + 'user/streak', {
+      method:'GET',
+      headers:{uid:uid, "content-type":"application/json"}
+    });
+    const data = await res.json();
+    if(data){
+      setBicepCount(data.exercise1);
+      setJackCount(data.exercise2);
+      setDeadCount(data.exercise3);
+      setStreakCount(data.streakCount);
+    } else {
+      setBicepCount(0);
+      setJackCount(0);
+      setDeadCount(0);
+    }
   }
 
   return (
@@ -43,7 +91,7 @@ const DailyGoal = () => {
             {(streakStatus) ? <AiFillFire className='text-7xl max-lg:text-6xl max-md:text-4xl max-sm:text-3xl' /> : <AiOutlineFire className='text-7xl max-lg:text-6xl max-md:text-4xl max-sm:text-2xl' />}
           </div>
           <div className='max-sm:flex max-sm:justify-center max-sm:gap-1 max-sm:items-center'>
-            <h1 className='text-5xl max-lg:text-4xl max-md:text-2xl max-sm:text-xl'>19</h1>
+            <h1 className='text-5xl max-lg:text-4xl max-md:text-2xl max-sm:text-xl'>{streakCount ? streakCount : "-"}</h1>
             <p>day streak</p>
           </div>
         </div>
@@ -54,7 +102,7 @@ const DailyGoal = () => {
         <div className='flex justify-between items-center border-2 border-green rounded-xl p-3 gap-3 max-sm:gap-2 text-4xl max-lg:text-3xl max-md:text-2xl max-sm:text-lg'>
           <h2 className=''>Bicep Curls</h2>
           <div className='flex justify-center items-center gap-8 max-sm:gap-4'>
-            <p className={`${(bicepCount > 10) ? "text-yellow-500" : ""}`}>{bicepCount} / 10</p>
+            <p className={`${(bicepCount >= 10) ? "text-yellow-500" : ""}`}>{bicepCount} / 10</p>
             <Button type="primary" onClick={() => setOpen(1)} className='bg-gray-500 flex justify-center items-center rounded-full py-5 px-3 text-white max-sm:p-2'>
               <AiFillCamera className='text-3xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl' />
             </Button>
@@ -63,7 +111,7 @@ const DailyGoal = () => {
               open={open === 1}
               onOk={sendCount}
               okText={"Close"}
-              onClose={sendCount}
+              onCancel={sendCount}
               width={1000}
             >
               <LiveStream updateCount={updateBicepCount} />
@@ -75,16 +123,16 @@ const DailyGoal = () => {
         <div className='flex justify-between items-center border-2 border-green rounded-xl p-3 gap-3 max-sm:gap-2 text-4xl max-lg:text-3xl max-md:text-2xl max-sm:text-lg'>
           <h2 className=''>Jumping Jacks</h2>
           <div className='flex justify-center items-center gap-8 max-sm:gap-4'>
-            <p className={`${(jackCount > 10) ? "text-yellow-500" : ""}`}>{jackCount} / 10</p>
+            <p className={`${(jackCount >= 10) ? "text-yellow-500" : ""}`}>{jackCount} / 10</p>
             <Button type="primary" onClick={() => setOpen(2)} className='bg-gray-500 flex justify-center items-center rounded-full py-5 px-3 text-white max-sm:p-2'>
               <AiFillCamera className='text-3xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl' />
             </Button>
             <Modal
               centered
               open={open === 2}
-              onOk={() => setOpen(0)}
+              onOk={sendCount}
               okText={"Close"}
-              onCancel={() => setOpen(0)}
+              onCancel={sendCount}
               width={1000}
             >
               <LiveStream updateCount={updateJackCount} />
@@ -95,16 +143,16 @@ const DailyGoal = () => {
         <div className='flex justify-between items-center border-2 border-green rounded-xl p-3 gap-3 max-sm:gap-2 text-4xl max-lg:text-3xl max-md:text-2xl max-sm:text-lg'>
           <h2 className=''>Deadlift</h2>
           <div className='flex justify-center items-center gap-8 max-sm:gap-4'>
-            <p className={`${(deadCount > 10) ? "text-yellow-500" : ""}`}>{deadCount} / 10</p>
+            <p className={`${(deadCount >= 10) ? "text-yellow-500" : ""}`}>{deadCount} / 10</p>
             <Button type="primary" onClick={() => setOpen(3)} className='bg-gray-500 flex justify-center items-center rounded-full py-5 px-3 text-white max-sm:p-2'>
               <AiFillCamera className='text-3xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl' />
             </Button>
             <Modal
               centered
               open={open === 3}
-              onOk={() => setOpen(0)}
+              onOk={sendCount}
               okText={"Close"}
-              onCancel={() => setOpen(0)}
+              onCancel={sendCount}
               width={1000}
             >
               <LiveStream updateCount={updateDeadCount} />
