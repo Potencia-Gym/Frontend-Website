@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { socket } from "../../socket";
 
-const LiveStream = ({updateCount}) => {
+const LiveStream = ({updateCount, socketName}) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -20,10 +20,11 @@ const LiveStream = ({updateCount}) => {
     const handleConnect = () => setIsConnected(true);
     const handleDisconnect = () => setIsConnected(false);
     const handleMessage = (data) => {
-      var a=data.split(" ")
-      setLeftCount(a[0]);
-      setRightCount(a[1]);
-      updateCount(Math.max(a[0], a[1]));
+      console.log(data);
+      var a=data.split(" ");
+      // setLeftCount(a[0]);
+      // setRightCount(a[1]);
+      // updateCount(Math.max(a[0], a[1]));
     };
 
     // Attach socket event listeners
@@ -70,7 +71,7 @@ const LiveStream = ({updateCount}) => {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     const imgurl = canvas.toDataURL("image/jpeg", 0.8);
     const imgurlModified = imgurl.slice(23);
-    socket.emit("send_frame", imgurlModified);
+    socket.emit(String(socketName), imgurlModified);
   };
 
   useEffect(() => {

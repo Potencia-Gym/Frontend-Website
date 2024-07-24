@@ -102,7 +102,7 @@ const DailyGoal = () => {
         <div className='flex justify-between items-center border-2 border-green rounded-xl p-3 gap-3 max-sm:gap-2 text-4xl max-lg:text-3xl max-md:text-2xl max-sm:text-lg'>
           <h2 className=''>Bicep Curls</h2>
           <div className='flex justify-center items-center gap-8 max-sm:gap-4'>
-            <p className={`${(bicepCount >= 10) ? "text-yellow-500" : ""}`}>{bicepCount} / 10</p>
+            <p className={`${(bicepCount >= 10) ? "text-yellow-500" : ""}`}>{bicepCount ? bicepCount : "-"} / 10</p>
             <Button type="primary" onClick={() => setOpen(1)} className='bg-gray-500 flex justify-center items-center rounded-full py-5 px-3 text-white max-sm:p-2'>
               <AiFillCamera className='text-3xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl' />
             </Button>
@@ -114,7 +114,7 @@ const DailyGoal = () => {
               onCancel={sendCount}
               width={1000}
             >
-              <LiveStream updateCount={updateBicepCount} />
+              <LiveStream updateCount={updateBicepCount} socketName={"send_frame"}/>
             </Modal>
             {/* <button onClick={() => { navigate("../../stream") }} ></button> */}
           </div>
@@ -123,7 +123,7 @@ const DailyGoal = () => {
         <div className='flex justify-between items-center border-2 border-green rounded-xl p-3 gap-3 max-sm:gap-2 text-4xl max-lg:text-3xl max-md:text-2xl max-sm:text-lg'>
           <h2 className=''>Jumping Jacks</h2>
           <div className='flex justify-center items-center gap-8 max-sm:gap-4'>
-            <p className={`${(jackCount >= 10) ? "text-yellow-500" : ""}`}>{jackCount} / 10</p>
+            <p className={`${(jackCount >= 10) ? "text-yellow-500" : ""}`}>{jackCount ? jackCount : "-"}/ 10</p>
             <Button type="primary" onClick={() => setOpen(2)} className='bg-gray-500 flex justify-center items-center rounded-full py-5 px-3 text-white max-sm:p-2'>
               <AiFillCamera className='text-3xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl' />
             </Button>
@@ -135,7 +135,7 @@ const DailyGoal = () => {
               onCancel={sendCount}
               width={1000}
             >
-              <LiveStream updateCount={updateJackCount} />
+              <LiveStream updateCount={updateJackCount} socketName={"jump_frame"}/>
             </Modal>
           </div>
         </div>
@@ -143,7 +143,7 @@ const DailyGoal = () => {
         <div className='flex justify-between items-center border-2 border-green rounded-xl p-3 gap-3 max-sm:gap-2 text-4xl max-lg:text-3xl max-md:text-2xl max-sm:text-lg'>
           <h2 className=''>Deadlift</h2>
           <div className='flex justify-center items-center gap-8 max-sm:gap-4'>
-            <p className={`${(deadCount >= 10) ? "text-yellow-500" : ""}`}>{deadCount} / 10</p>
+            <p className={`${(deadCount >= 10) ? "text-yellow-500" : ""}`}>{deadCount ? deadCount : "-"} / 10</p>
             <Button type="primary" onClick={() => setOpen(3)} className='bg-gray-500 flex justify-center items-center rounded-full py-5 px-3 text-white max-sm:p-2'>
               <AiFillCamera className='text-3xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl' />
             </Button>
@@ -155,7 +155,7 @@ const DailyGoal = () => {
               onCancel={sendCount}
               width={1000}
             >
-              <LiveStream updateCount={updateDeadCount} />
+              <LiveStream updateCount={updateDeadCount} socketName={"deadlift_frame"}/>
             </Modal>
           </div>
         </div>
