@@ -16,7 +16,7 @@ const EquipmentDetect = () => {
     formData.append('image', file);
 
     try {
-      const response = await fetch('https://d7bz6z99-8000.inc1.devtunnels.ms/equipment', {
+      const response = await fetch('http://172.20.10.3:8000/equipment', {
         method: 'POST',
         body: formData,
       });

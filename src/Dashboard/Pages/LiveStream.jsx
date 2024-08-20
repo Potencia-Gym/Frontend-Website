@@ -7,6 +7,8 @@ const LiveStream = ({updateCount, socketName}) => {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [leftCount, setLeftCount] = useState(0);
   const [rightCount, setRightCount] = useState(0);
+  const [leftCount1, setLeftCount1] = useState(0);
+  const [rightCount2, setRightCount2] = useState(0);
 
   useEffect(() => {
     // Connect to the socket server
@@ -22,9 +24,9 @@ const LiveStream = ({updateCount, socketName}) => {
     const handleMessage = (data) => {
       console.log(data);
       var a=data.split(" ");
-      // setLeftCount(a[0]);
-      // setRightCount(a[1]);
-      // updateCount(Math.max(a[0], a[1]));
+      setLeftCount(a[0]);
+      setRightCount(a[1]);
+      updateCount(a[1]);
     };
 
     // Attach socket event listeners
@@ -97,8 +99,8 @@ const LiveStream = ({updateCount, socketName}) => {
       <h1>Connection to server: {isConnected ? "true" : "false"}</h1>
       <video ref={videoRef} autoPlay />
       <canvas ref={canvasRef} className="hidden"></canvas>
-      <div>Left Arm: {leftCount}</div>
-      <div>Right Arm: {rightCount}</div>
+      <div>Stage: {leftCount}</div>
+      <div>Count: {rightCount}</div>
       <button onClick={stopCapturing}>Stop</button>
     </div>
   );

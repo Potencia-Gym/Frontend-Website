@@ -14,9 +14,9 @@ const DailyGoal = () => {
   const [streakStatus, setStreakStatus] = useState(true);
   const [streakCount, setStreakCount] = useState(null);
   const [open, setOpen] = useState(0);
-  const [bicepCount, setBicepCount] = useState(0);
+  const [bicepCount, setBicepCount] = useState(10);
   const [jackCount, setJackCount] = useState(0);
-  const [deadCount, setDeadCount] = useState(0);
+  const [deadCount, setDeadCount] = useState(5);
   const navigate = useNavigate();
 
   const getStreakData = useCallback(async ()=>{
@@ -26,14 +26,14 @@ const DailyGoal = () => {
     });
     const data = await res.json();
     if(data){
-      setBicepCount(data.exercise1);
+      // setBicepCount(data.exercise1);
       setJackCount(data.exercise2);
-      setDeadCount(data.exercise3);
+      // setDeadCount(data.exercise3);
       setStreakCount(data.streakCount);
     } else {
-      setBicepCount(0);
+      // setBicepCount(0);
       setJackCount(0);
-      setDeadCount(0);
+      // setDeadCount(0);
     }
   }, [uid])
 

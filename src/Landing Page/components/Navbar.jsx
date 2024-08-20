@@ -18,10 +18,8 @@ function Navbar() {
         </div>
 
         <div className={`${drop ? "":"max-sm:hidden"} flex gap-5 font-font1 font-semibold max-lg:hidden max-sm:flex max-sm:flex-col max-sm:mt-2 max-sm:mr-auto max-sm:pl-2`}>
-          <Link to={'/'} className='underline underline-offset-8 decoration-green'>Home</Link>
-          <p>Features</p>
-          <p>Pricing</p>
-          <p>Contact</p>
+          <Link to={'/'} >Home</Link>
+          <Link to={'https://drive.google.com/file/d/1gAQh2hGn26Wt9zw7FpHbpAyas8VxyZHq/view?usp=sharing'} className='text-yellow-500 font-semibold underline underline-offset-8'>Demo Link</Link>
         </div>
 
         <div className={`${drop ? "":"max-sm:hidden"} flex gap-5 font-font1 justify-center items-center font-semibold max-sm:flex-col max-sm:mt-2 max-sm:mr-auto`}>
