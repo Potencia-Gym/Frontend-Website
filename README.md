@@ -8,6 +8,6 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 
-#Figma File
+**Figma File**
 
 https://www.figma.com/design/fflCFCxWmtEo4dyzJVirPf/Potencia?node-id=4-3&node-type=CANVAS&t=LhhEug8YTc6xRjPY-0
